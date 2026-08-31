@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {{ t.get('admin_dashboard', 'Admin Dashboard') }}
+    </title>
+
+
+    <!-- ================================================== -->
+    <!-- BOOTSTRAP -->
+    <!-- ================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- ================================================== -->
+    <!-- STYLE -->
+    <!-- ================================================== -->
+
+    <style>
+
+        body {
+
+            background: #f4f8f3;
+
+            font-family: Arial, sans-serif;
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+
+        .container-main {
+
+            max-width: 1400px;
+
+            margin: 30px auto;
+
+            padding: 20px;
+
+        }
+
+
+        /* ==================================================
+           HEADER
+        ================================================== */
+
+        .header-card {
+
+            background: linear-gradient(
+                135deg,
+                #198754,
+                #157347
+            );
+
+            color: white;
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 6px 20px rgba(0,0,0,0.12);
+
+        }
+
+
+        .header-card h1 {
+
+            margin: 0;
+
+            font-weight: bold;
+
+        }
+
+
+        .header-card p {
+
+            margin-top: 8px;
+
+            margin-bottom: 0;
+
+        }
+
+
+        /* ==================================================
+           LANGUAGE
+        ================================================== */
+
+        .language-box {
+
+            background: white;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.08);
+
+        }
+
+
+        /* ==================================================
+           STATISTICS
+        ================================================== */
+
+        .stat-card {
+
+            background: white;
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+
+            height: 100%;
+
+        }
+
+
+        .stat-number {
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            margin-top: 8px;
+
+        }
+
+
+        .stat-title {
+
+            color: #666;
+
+            font-weight: bold;
+
+        }
+
+
+        .stat-total {
+
+            border-top: 5px solid #198754;
+
+        }
+
+
+        .stat-pending {
+
+            border-top: 5px solid #ffc107;
+
+        }
+
+
+        .stat-review {
+
+            border-top: 5px solid #0d6efd;
+
+        }
+
+
+        .stat-verified {
+
+            border-top: 5px solid #198754;
+
+        }
+
+
+        .stat-rejected {
+
+            border-top: 5px solid #dc3545;
+
+        }
+
+
+        /* ==================================================
+           SEARCH
+        ================================================== */
+
+        .search-card {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 15px;
+
+            margin-top: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+
+        }
+
+
+        /* ==================================================
+           COMPLAINT CARD
+        ================================================== */
+
+        .complaint-card {
+
+            background: white;
+
+            border-radius: 15px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+
+            overflow: hidden;
+
+        }
+
+
+        .complaint-header {
+
+            background: #f8f9fa;
+
+            padding: 15px 20px;
+
+            border-bottom: 1px solid #ddd;
+
+        }
+
+
+        .complaint-body {
+
+            padding: 20px;
+
+        }
+
+
+        /* ==================================================
+           INFORMATION BOX
+        ================================================== */
+
+        .info-box {
+
+            background: #f8f9fa;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            height: 100%;
+
+        }
+
+
+        .info-box strong {
+
+            color: #333;
+
+        }
+
+
+        /* ==================================================
+           AI BOX
+        ================================================== */
+
+        .ai-box {
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-top: 15px;
+
+        }
+
+
+        .ai-high {
+
+            background: #f8d7da;
+
+            border-left: 5px solid #dc3545;
+
+        }
+
+
+        .ai-medium {
+
+            background: #fff3cd;
+
+            border-left: 5px solid #ffc107;
+
+        }
+
+
+        .ai-low {
+
+            background: #d1e7dd;
+
+            border-left: 5px solid #198754;
+
+        }
+
+
+        /* ==================================================
+           STATUS BADGES
+        ================================================== */
+
+        .status-badge {
+
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            font-size: 13px;
+
+        }
+
+
+        .status-pending {
+
+            background: #fff3cd;
+
+            color: #856404;
+
+        }
+
+
+        .status-review {
+
+            background: #cfe2ff;
+
+            color: #084298;
+
+        }
+
+
+        .status-verified {
+
+            background: #d1e7dd;
+
+            color: #0f5132;
+
+        }
+
+
+        .status-rejected {
+
+            background: #f8d7da;
+
+            color: #842029;
+
+        }
+
+
+        /* ==================================================
+           STATUS SECTION
+        ================================================== */
+
+        .status-section {
+
+            background: #f8f9fa;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .status-form {
+
+            display: flex;
+
+            gap: 10px;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .status-form select {
+
+            min-width: 180px;
+
+        }
+
+
+        /* ==================================================
+           DESCRIPTION
+        ================================================== */
+
+        .description-box {
+
+            background: #fff;
+
+            border: 1px solid #ddd;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-top: 10px;
+
+        }
+
+
+        /* ==================================================
+           ACTION BUTTONS
+        ================================================== */
+
+        .action-buttons {
+
+            margin-top: 15px;
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        /* ==================================================
+           EMPTY STATE
+        ================================================== */
+
+        .empty-box {
+
+            background: white;
+
+            padding: 50px 20px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+
+        }
+
+
+        .empty-icon {
+
+            font-size: 50px;
+
+        }
+
+
+        /* ==================================================
+           RESPONSIVE
+        ================================================== */
+
+        @media (max-width: 768px) {
+
+            .container-main {
+
+                padding: 10px;
+
+                margin: 15px auto;
+
+            }
+
+            .header-card {
+
+                padding: 20px;
+
+            }
+
+            .stat-number {
+
+                font-size: 26px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container-main">
+
+
+    <!-- ================================================== -->
+    <!-- LANGUAGE SELECTOR -->
+    <!-- ================================================== -->
+
+    <div class="language-box">
+
+        <label class="fw-bold mb-2">
+
+            🌐
+            {{ t.get(
+                'select_language',
+                'Select Language'
+            ) }}
+
+        </label>
+
+
+        <select
+            class="form-select"
+            onchange="changeLanguage(this.value)"
+        >
+
+            {% for language in languages %}
+
+                <option
+                    value="{{ language }}"
+                    {% if language == current_language %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ language }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <div class="header-card">
+
+        <h1>
+
+            🛡️
+            {{ t.get(
+                'admin_dashboard',
+                'Admin Dashboard'
+            ) }}
+
+        </h1>
+
+
+        <p>
+
+            {{ t.get(
+                'admin_description',
+                'Manage complaints, review AI analysis and update complaint status.'
+            ) }}
+
+        </p>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- STATISTICS -->
+    <!-- ================================================== -->
+
+    <div class="row g-3">
+
+
+        <!-- TOTAL -->
+
+        <div class="col-6 col-md">
+
+            <div class="stat-card stat-total">
+
+                <div class="stat-title">
+
+                    📊
+                    {{ t.get(
+                        'total_complaints',
+                        'Total'
+                    ) }}
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ total }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING -->
+
+        <div class="col-6 col-md">
+
+            <div class="stat-card stat-pending">
+
+                <div class="stat-title">
+
+                    🟡
+                    {{ t.get(
+                        'pending',
+                        'Pending'
+                    ) }}
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ pending }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- UNDER REVIEW -->
+
+        <div class="col-6 col-md">
+
+            <div class="stat-card stat-review">
+
+                <div class="stat-title">
+
+                    🔵
+                    {{ t.get(
+                        'under_review',
+                        'Under Review'
+                    ) }}
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ under_review }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- VERIFIED -->
+
+        <div class="col-6 col-md">
+
+            <div class="stat-card stat-verified">
+
+                <div class="stat-title">
+
+                    🟢
+                    {{ t.get(
+                        'verified_status',
+                        'Verified'
+                    ) }}
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ verified }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REJECTED -->
+
+        <div class="col-6 col-md">
+
+            <div class="stat-card stat-rejected">
+
+                <div class="stat-title">
+
+                    🔴
+                    {{ t.get(
+                        'rejected',
+                        'Rejected'
+                    ) }}
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ rejected }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- SEARCH AND FILTER -->
+    <!-- ================================================== -->
+
+    <div class="search-card">
+
+        <form
+            method="GET"
+            action="{{ url_for('admin') }}"
+        >
+
+            <div class="row g-3 align-items-end">
+
+
+                <!-- SEARCH -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label fw-bold">
+
+                        🔍
+                        {{ t.get(
+                            'search',
+                            'Search'
+                        ) }}
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        value="{{ search }}"
+                        placeholder="{{ t.get(
+                            'search_placeholder',
+                            'Search product, dealer, type or complaint...'
+                        ) }}"
+                    >
+
+                </div>
+
+
+                <!-- STATUS FILTER -->
+
+                <div class="col-md-4">
+
+                    <label class="form-label fw-bold">
+
+                        📋
+                        {{ t.get(
+                            'filter_status',
+                            'Filter by Status'
+                        ) }}
+
+                    </label>
+
+
+                    <select
+                        name="status"
+                        class="form-select"
+                    >
+
+                        <option value="">
+
+                            {{ t.get(
+                                'all_status',
+                                'All Status'
+                            ) }}
+
+                        </option>
+
+
+                        <option
+                            value="Pending"
+                            {% if status_filter == 'Pending' %}
+                                selected
+                            {% endif %}
+                        >
+
+                            🟡
+                            {{ t.get(
+                                'pending',
+                                'Pending'
+                            ) }}
+
+                        </option>
+
+
+                        <option
+                            value="Under Review"
+                            {% if status_filter == 'Under Review' %}
+                                selected
+                            {% endif %}
+                        >
+
+                            🔵
+                            {{ t.get(
+                                'under_review',
+                                'Under Review'
+                            ) }}
+
+                        </option>
+
+
+                        <option
+                            value="Verified"
+                            {% if status_filter == 'Verified' %}
+                                selected
+                            {% endif %}
+                        >
+
+                            🟢
+                            {{ t.get(
+                                'verified_status',
+                                'Verified'
+                            ) }}
+
+                        </option>
+
+
+                        <option
+                            value="Rejected"
+                            {% if status_filter == 'Rejected' %}
+                                selected
+                            {% endif %}
+                        >
+
+                            🔴
+                            {{ t.get(
+                                'rejected',
+                                'Rejected'
+                            ) }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEARCH BUTTON -->
+
+                <div class="col-md-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success w-100"
+                    >
+
+                        🔍
+                        {{ t.get(
+                            'search',
+                            'Search'
+                        ) }}
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- COMPLAINT COUNT -->
+    <!-- ================================================== -->
+
+    <div class="mb-3">
+
+        <strong>
+
+            📄
+            {{ complaints|length }}
+
+            {{ t.get(
+                'complaints_found',
+                'complaints found'
+            ) }}
+
+        </strong>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- COMPLAINTS -->
+    <!-- ================================================== -->
+
+    {% if complaints %}
+
+
+        {% for complaint in complaints %}
+
+
+        <div class="complaint-card">
+
+
+            <!-- ================================================== -->
+            <!-- COMPLAINT HEADER -->
+            <!-- ================================================== -->
+
+            <div class="complaint-header">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+
+                    <div>
+
+                        <strong>
+
+                            📝
+                            {{ t.get(
+                                'complaint',
+                                'Complaint'
+                            ) }}
+
+                            #{{ complaint['id'] }}
+
+                        </strong>
+
+                    </div>
+
+
+                    <!-- CURRENT STATUS -->
+
+                    <div>
+
+                        {% if complaint['status'] == 'Pending' %}
+
+                            <span class="status-badge status-pending">
+
+                                🟡
+                                {{ t.get(
+                                    'pending',
+                                    'Pending'
+                                ) }}
+
+                            </span>
+
+
+                        {% elif complaint['status'] == 'Under Review' %}
+
+                            <span class="status-badge status-review">
+
+                                🔵
+                                {{ t.get(
+                                    'under_review',
+                                    'Under Review'
+                                ) }}
+
+                            </span>
+
+
+                        {% elif complaint['status'] == 'Verified' %}
+
+                            <span class="status-badge status-verified">
+
+                                🟢
+                                {{ t.get(
+                                    'verified_status',
+                                    'Verified'
+                                ) }}
+
+                            </span>
+
+
+                        {% elif complaint['status'] == 'Rejected' %}
+
+                            <span class="status-badge status-rejected">
+
+                                🔴
+                                {{ t.get(
+                                    'rejected',
+                                    'Rejected'
+                                ) }}
+
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status-badge status-pending">
+
+                                🟡
+                                {{ complaint['status'] or 'Pending' }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================== -->
+            <!-- COMPLAINT BODY -->
+            <!-- ================================================== -->
+
+            <div class="complaint-body">
+
+
+                <div class="row g-3">
+
+
+                    <!-- ================================================== -->
+                    <!-- PRODUCT INFORMATION -->
+                    <!-- ================================================== -->
+
+                    <div class="col-md-6">
+
+                        <div class="info-box">
+
+                            <p>
+
+                                <strong>
+
+                                    🏷️
+                                    {{ t.get(
+                                        'product_type',
+                                        'Product Type'
+                                    ) }}:
+
+                                </strong>
+
+                                {{ complaint['product_type'] or '-' }}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+
+                                    📦
+                                    {{ t.get(
+                                        'product_name',
+                                        'Product Name'
+                                    ) }}:
+
+                                </strong>
+
+                                {{ complaint['product'] }}
+
+                            </p>
+
+
+                            <p class="mb-0">
+
+                                <strong>
+
+                                    🏪
+                                    {{ t.get(
+                                        'dealer',
+                                        'Dealer'
+                                    ) }}:
+
+                                </strong>
+
+                                {{ complaint['dealer'] }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================== -->
+                    <!-- AI ANALYSIS -->
+                    <!-- ================================================== -->
+
+                    <div class="col-md-6">
+
+
+                        {% if complaint['ai_risk'] == 'High Risk' %}
+
+                            <div class="ai-box ai-high">
+
+
+                        {% elif complaint['ai_risk'] == 'Possible Risk' %}
+
+                            <div class="ai-box ai-medium">
+
+
+                        {% else %}
+
+                            <div class="ai-box ai-low">
+
+                        {% endif %}
+
+
+                            <h5>
+
+                                🤖
+                                {{ t.get(
+                                    'ai_analysis',
+                                    'AI Analysis'
+                                ) }}
+
+                            </h5>
+
+
+                            <p>
+
+                                <strong>
+
+                                    {{ t.get(
+                                        'ai_risk',
+                                        'AI Risk'
+                                    ) }}:
+
+                                </strong>
+
+                                {{ complaint['ai_risk'] or '-' }}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+
+                                    {{ t.get(
+                                        'ai_issue',
+                                        'AI Issue'
+                                    ) }}:
+
+                                </strong>
+
+                                {{ complaint['ai_issue'] or '-' }}
+
+                            </p>
+
+
+                            <p class="mb-0">
+
+                                <strong>
+
+                                    {{ t.get(
+                                        'ai_reason',
+                                        'AI Reason'
+                                    ) }}:
+
+                                </strong>
+
+                                {{ complaint['ai_reason'] or '-' }}
+
+                            </p>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================== -->
+                <!-- DESCRIPTION -->
+                <!-- ================================================== -->
+
+                <div class="description-box">
+
+                    <strong>
+
+                        📝
+                        {{ t.get(
+                            'description',
+                            'Complaint Description'
+                        ) }}
+
+                    </strong>
+
+
+                    <p class="mb-0 mt-2">
+
+                        {{ complaint['description'] }}
+
+                    </p>
+
+                </div>
+
+
+                <!-- ================================================== -->
+                <!-- STATUS MANAGEMENT -->
+                <!-- ================================================== -->
+
+                <div class="status-section">
+
+                    <strong>
+
+                        📋
+                        {{ t.get(
+                            'update_status',
+                            'Update Complaint Status'
+                        ) }}
+
+                    </strong>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'update_status',
+                            id=complaint['id']
+                        ) }}"
+                        class="status-form mt-3"
+                    >
+
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="Pending"
+                                {% if complaint['status'] == 'Pending' %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                🟡
+                                {{ t.get(
+                                    'pending',
+                                    'Pending'
+                                ) }}
+
+                            </option>
+
+
+                            <option
+                                value="Under Review"
+                                {% if complaint['status'] == 'Under Review' %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                🔵
+                                {{ t.get(
+                                    'under_review',
+                                    'Under Review'
+                                ) }}
+
+                            </option>
+
+
+                            <option
+                                value="Verified"
+                                {% if complaint['status'] == 'Verified' %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                🟢
+                                {{ t.get(
+                                    'verified_status',
+                                    'Verified'
+                                ) }}
+
+                            </option>
+
+
+                            <option
+                                value="Rejected"
+                                {% if complaint['status'] == 'Rejected' %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                🔴
+                                {{ t.get(
+                                    'rejected',
+                                    'Rejected'
+                                ) }}
+
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            💾
+                            {{ t.get(
+                                'update_status',
+                                'Update Status'
+                            ) }}
+
+                        </button>
+
+
+                    </form>
+
+                </div>
+
+
+                <!-- ================================================== -->
+                <!-- ACTION BUTTONS -->
+                <!-- ================================================== -->
+
+                <div class="action-buttons">
+
+
+                    <a
+                        href="{{ url_for(
+                            'delete',
+                            id=complaint['id']
+                        ) }}"
+                        class="btn btn-outline-danger"
+                        onclick="return confirmDelete();"
+                    >
+
+                        🗑️
+                        {{ t.get(
+                            'delete',
+                            'Delete'
+                        ) }}
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <!-- ================================================== -->
+        <!-- NO COMPLAINTS -->
+        <!-- ================================================== -->
+
+        <div class="empty-box">
+
+            <div class="empty-icon">
+
+                📭
+
+            </div>
+
+
+            <h3>
+
+                {{ t.get(
+                    'no_complaints',
+                    'No Complaints Found'
+                ) }}
+
+            </h3>
+
+
+            <p class="text-muted">
+
+                {{ t.get(
+                    'no_complaints_description',
+                    'There are no complaints matching your search or filter.'
+                ) }}
+
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+    <!-- ================================================== -->
+    <!-- BOTTOM BUTTONS -->
+    <!-- ================================================== -->
+
+    <div class="text-center mt-4 mb-4">
+
+
+        <a
+            href="{{ url_for('add_product') }}"
+            class="btn btn-success me-2"
+        >
+
+            ➕
+            {{ t.get(
+                'add_product',
+                'Add Registered Product'
+            ) }}
+
+        </a>
+
+
+        <a
+            href="{{ url_for('home') }}"
+            class="btn btn-outline-secondary me-2"
+        >
+
+            🏠
+            {{ t.get(
+                'home',
+                'Home'
+            ) }}
+
+        </a>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="btn btn-outline-danger"
+        >
+
+            🚪
+            {{ t.get(
+                'logout',
+                'Logout'
+            ) }}
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+<!-- ================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ================================================== -->
+
+<script>
+
+
+function changeLanguage(language) {
+
+    window.location.href =
+        "/set_language/" +
+        encodeURIComponent(language);
+
+}
+
+
+function confirmDelete() {
+
+    return confirm(
+        "{{ t.get(
+            'delete_confirmation',
+            'Are you sure you want to delete this complaint?'
+        ) }}"
+    );
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ t.get('verify', 'Verify Product') }}
+    </title>
+
+
+    <!-- ================================================== -->
+    <!-- QR SCANNER LIBRARY -->
+    <!-- ================================================== -->
+
+    <script
+        src="https://unpkg.com/html5-qrcode"
+        type="text/javascript">
+    </script>
+
+
+    <!-- ================================================== -->
+    <!-- STYLE -->
+    <!-- ================================================== -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e8f5e9,
+                    #f4f8f3
+                );
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            padding: 20px;
+
+        }
+
+
+        .container {
+
+            max-width: 600px;
+
+            margin: 30px auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.12);
+
+        }
+
+
+        /* ================================================== */
+        /* LANGUAGE */
+        /* ================================================== */
+
+        .language-box {
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .language-box label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+        }
+
+
+        .language-box select {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            background: white;
+
+        }
+
+
+        /* ================================================== */
+        /* TITLE */
+        /* ================================================== */
+
+        h1 {
+
+            text-align: center;
+
+            color: #1b5e20;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #666;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        /* ================================================== */
+        /* QR BUTTON */
+        /* ================================================== */
+
+        .scan-button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #1565c0;
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        .scan-button:hover {
+
+            background: #0d47a1;
+
+        }
+
+
+        /* ================================================== */
+        /* QR READER */
+        /* ================================================== */
+
+        #reader {
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            display: none;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+        }
+
+
+        /* ================================================== */
+        /* DIVIDER */
+        /* ================================================== */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin: 25px 0;
+
+            color: #777;
+
+            font-weight: bold;
+
+        }
+
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #ddd;
+
+        }
+
+
+        /* ================================================== */
+        /* FORM */
+        /* ================================================== */
+
+        label.form-label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+        }
+
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #198754;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(25,135,84,0.12);
+
+        }
+
+
+        .verify-button {
+
+            width: 100%;
+
+            margin-top: 15px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #198754;
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        .verify-button:hover {
+
+            background: #146c43;
+
+        }
+
+
+        /* ================================================== */
+        /* GENUINE RESULT */
+        /* ================================================== */
+
+        .verified-card {
+
+            margin-top: 30px;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            border: 2px solid #198754;
+
+            background: #f1fff5;
+
+        }
+
+
+        .verified-header {
+
+            background: #198754;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+        .verified-icon {
+
+            font-size: 50px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .verified-header h2 {
+
+            margin: 0;
+
+        }
+
+
+        .product-details {
+
+            padding: 25px;
+
+        }
+
+
+        .detail-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #ddd;
+
+        }
+
+
+        .detail-row:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .detail-label {
+
+            font-weight: bold;
+
+            color: #444;
+
+        }
+
+
+        .detail-value {
+
+            text-align: right;
+
+            color: #222;
+
+            word-break: break-word;
+
+        }
+
+
+        /* ================================================== */
+        /* BLOCKED RESULT */
+        /* ================================================== */
+
+        .blocked-card {
+
+            margin-top: 30px;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            border: 2px solid #dc3545;
+
+            background: #fff5f5;
+
+        }
+
+
+        .blocked-header {
+
+            background: #dc3545;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+        .blocked-icon {
+
+            font-size: 50px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .blocked-header h2 {
+
+            margin: 0;
+
+        }
+
+
+        .blocked-body {
+
+            padding: 25px;
+
+        }
+
+
+        .blocked-warning {
+
+            background: #f8d7da;
+
+            color: #842029;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* ================================================== */
+        /* ACTIVE RESULT */
+        /* ================================================== */
+
+        .active-card {
+
+            margin-top: 30px;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            border: 2px solid #0d6efd;
+
+            background: #f5f9ff;
+
+        }
+
+
+        .active-header {
+
+            background: #0d6efd;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+        .active-icon {
+
+            font-size: 50px;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .active-header h2 {
+
+            margin: 0;
+
+        }
+
+
+        .active-body {
+
+            padding: 25px;
+
+        }
+
+
+        /* ================================================== */
+        /* UNKNOWN STATUS */
+        /* ================================================== */
+
+        .unknown-card {
+
+            margin-top: 30px;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            background: #fff3cd;
+
+            border: 2px solid #ffc107;
+
+        }
+
+
+        /* ================================================== */
+        /* NOT FOUND */
+        /* ================================================== */
+
+        .not-found-card {
+
+            margin-top: 30px;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            background: #fff3cd;
+
+            border: 2px solid #ffc107;
+
+        }
+
+
+        .not-found-card h2 {
+
+            color: #856404;
+
+            margin-top: 0;
+
+        }
+
+
+        .report-button {
+
+            display: block;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            margin-top: 20px;
+
+            padding: 13px;
+
+            border-radius: 8px;
+
+            background: #dc3545;
+
+            color: white;
+
+            font-weight: bold;
+
+        }
+
+
+        .report-button:hover {
+
+            background: #bb2d3b;
+
+        }
+
+
+        /* ================================================== */
+        /* BACK BUTTON */
+        /* ================================================== */
+
+        .back-button {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            color: #333;
+
+            border: 1px solid #aaa;
+
+        }
+
+
+        .back-button:hover {
+
+            background: #f1f1f1;
+
+        }
+
+
+        /* ================================================== */
+        /* MOBILE */
+        /* ================================================== */
+
+        @media (max-width: 600px) {
+
+            .container {
+
+                margin: 10px auto;
+
+                padding: 20px;
+
+            }
+
+
+            .detail-row {
+
+                flex-direction: column;
+
+                gap: 5px;
+
+            }
+
+
+            .detail-value {
+
+                text-align: left;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ================================================== -->
+    <!-- LANGUAGE SELECTOR -->
+    <!-- ================================================== -->
+
+    <div class="language-box">
+
+        <label>
+
+            🌐
+            {{ t.get(
+                'select_language',
+                'Select Language'
+            ) }}
+
+        </label>
+
+
+        <select
+            onchange="changeLanguage(this.value)"
+        >
+
+            {% for language in languages %}
+
+                <option
+                    value="{{ language }}"
+                    {% if language == current_language %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ language }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- TITLE -->
+    <!-- ================================================== -->
+
+    <h1>
+
+        🌱
+        {{ t.get(
+            'verify',
+            'Verify Product'
+        ) }}
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        {{ t.get(
+            'verify_description',
+            'Scan the QR code or enter the Product ID to verify whether the agricultural product is registered.'
+        ) }}
+
+    </p>
+
+
+    <!-- ================================================== -->
+    <!-- QR SCANNER BUTTON -->
+    <!-- ================================================== -->
+
+    <button
+        type="button"
+        class="scan-button"
+        onclick="startScanner()"
+    >
+
+        📷
+        {{ t.get(
+            'scan_qr',
+            'Scan QR Code'
+        ) }}
+
+    </button>
+
+
+    <!-- ================================================== -->
+    <!-- QR READER -->
+    <!-- ================================================== -->
+
+    <div id="reader"></div>
+
+
+    <!-- ================================================== -->
+    <!-- DIVIDER -->
+    <!-- ================================================== -->
+
+    <div class="divider">
+
+        {{ t.get(
+            'or',
+            'OR'
+        ) }}
+
+    </div>
+
+
+    <!-- ================================================== -->
+    <!-- MANUAL PRODUCT ID -->
+    <!-- ================================================== -->
+
+    <form method="POST">
+
+
+        <label class="form-label">
+
+            🆔
+            {{ t.get(
+                'product_id',
+                'Product ID'
+            ) }}
+
+        </label>
+
+
+        <input
+            type="text"
+            name="product_id"
+            id="product_id"
+            placeholder="{{ t.get(
+                'product_id_placeholder',
+                'Enter Product ID'
+            ) }}"
+            required
+        >
+
+
+        <button
+            type="submit"
+            class="verify-button"
+        >
+
+            🔍
+            {{ t.get(
+                'verify_product',
+                'Verify Product'
+            ) }}
+
+        </button>
+
+    </form>
+
+
+    <!-- ================================================== -->
+    <!-- SEARCH RESULT -->
+    <!-- ================================================== -->
+
+    {% if searched %}
+
+
+        {% if product %}
+
+
+            <!-- ================================================== -->
+            <!-- GENUINE -->
+            <!-- ================================================== -->
+
+            {% if product[4] == "Genuine" %}
+
+                <div class="verified-card">
+
+                    <div class="verified-header">
+
+                        <div class="verified-icon">
+                            ✅
+                        </div>
+
+                        <h2>
+
+                            {{ t.get(
+                                'verified',
+                                'Product Verified'
+                            ) }}
+
+                        </h2>
+
+                        <p class="mb-0">
+
+                            {{ t.get(
+                                'genuine_product_message',
+                                'This product is registered as genuine in our system.'
+                            ) }}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="product-details">
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🆔
+                                {{ t.get(
+                                    'product_id',
+                                    'Product ID'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[0] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                📦
+                                {{ t.get(
+                                    'product_name',
+                                    'Product Name'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[1] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🏢
+                                {{ t.get(
+                                    'company',
+                                    'Company'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[2] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🔢
+                                {{ t.get(
+                                    'batch_no',
+                                    'Batch Number'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[3] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                📋
+                                {{ t.get(
+                                    'status',
+                                    'Status'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                🟢
+                                {{ product[4] }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            <!-- ================================================== -->
+            <!-- ACTIVE -->
+            <!-- ================================================== -->
+
+            {% elif product[4] == "Active" %}
+
+                <div class="active-card">
+
+                    <div class="active-header">
+
+                        <div class="active-icon">
+                            🟢
+                        </div>
+
+                        <h2>
+
+                            {{ t.get(
+                                'active_product',
+                                'Product Active'
+                            ) }}
+
+                        </h2>
+
+                        <p class="mb-0">
+
+                            {{ t.get(
+                                'active_product_message',
+                                'This product is registered and currently active.'
+                            ) }}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="active-body">
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🆔
+                                {{ t.get(
+                                    'product_id',
+                                    'Product ID'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[0] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                📦
+                                {{ t.get(
+                                    'product_name',
+                                    'Product Name'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[1] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🏢
+                                {{ t.get(
+                                    'company',
+                                    'Company'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[2] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🔢
+                                {{ t.get(
+                                    'batch_no',
+                                    'Batch Number'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[3] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                📋
+                                {{ t.get(
+                                    'status',
+                                    'Status'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                🟢
+                                {{ product[4] }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            <!-- ================================================== -->
+            <!-- BLOCKED -->
+            <!-- ================================================== -->
+
+            {% elif product[4] == "Blocked" %}
+
+                <div class="blocked-card">
+
+                    <div class="blocked-header">
+
+                        <div class="blocked-icon">
+                            ⚠️
+                        </div>
+
+                        <h2>
+
+                            {{ t.get(
+                                'blocked_product',
+                                'Product Blocked'
+                            ) }}
+
+                        </h2>
+
+                        <p class="mb-0">
+
+                            {{ t.get(
+                                'blocked_product_message',
+                                'This product is registered in the system but has been blocked.'
+                            ) }}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="blocked-body">
+
+
+                        <div class="blocked-warning">
+
+                            <strong>
+
+                                ⚠️
+                                {{ t.get(
+                                    'warning',
+                                    'Warning'
+                                ) }}
+
+                            </strong>
+
+                            <br>
+
+                            {{ t.get(
+                                'blocked_warning',
+                                'Do not treat this product as an approved genuine product. Please contact the appropriate authority or report the product if necessary.'
+                            ) }}
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🆔
+                                {{ t.get(
+                                    'product_id',
+                                    'Product ID'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[0] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                📦
+                                {{ t.get(
+                                    'product_name',
+                                    'Product Name'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[1] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🏢
+                                {{ t.get(
+                                    'company',
+                                    'Company'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[2] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                🔢
+                                {{ t.get(
+                                    'batch_no',
+                                    'Batch Number'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                {{ product[3] }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+
+                                📋
+                                {{ t.get(
+                                    'status',
+                                    'Status'
+                                ) }}
+
+                            </span>
+
+                            <span class="detail-value">
+
+                                🔴
+                                {{ product[4] }}
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            <!-- ================================================== -->
+            <!-- OTHER STATUS -->
+            <!-- ================================================== -->
+
+            {% else %}
+
+                <div class="unknown-card">
+
+                    <h2>
+
+                        ⚪
+                        {{ t.get(
+                            'product_found',
+                            'Product Found'
+                        ) }}
+
+                    </h2>
+
+                    <p>
+
+                        {{ t.get(
+                            'status_unknown_message',
+                            'The product is registered, but its current status requires further verification.'
+                        ) }}
+
+                    </p>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+
+                            🆔
+                            {{ t.get(
+                                'product_id',
+                                'Product ID'
+                            ) }}
+
+                        </span>
+
+                        <span class="detail-value">
+
+                            {{ product[0] }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+
+                            📦
+                            {{ t.get(
+                                'product_name',
+                                'Product Name'
+                            ) }}
+
+                        </span>
+
+                        <span class="detail-value">
+
+                            {{ product[1] }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+
+                            🏢
+                            {{ t.get(
+                                'company',
+                                'Company'
+                            ) }}
+
+                        </span>
+
+                        <span class="detail-value">
+
+                            {{ product[2] }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+
+                            🔢
+                            {{ t.get(
+                                'batch_no',
+                                'Batch Number'
+                            ) }}
+
+                        </span>
+
+                        <span class="detail-value">
+
+                            {{ product[3] }}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span class="detail-label">
+
+                            📋
+                            {{ t.get(
+                                'status',
+                                'Status'
+                            ) }}
+
+                        </span>
+
+                        <span class="detail-value">
+
+                            {{ product[4] }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+        {% else %}
+
+
+            <!-- ================================================== -->
+            <!-- PRODUCT NOT FOUND -->
+            <!-- ================================================== -->
+
+            <div class="not-found-card">
+
+                <h2>
+
+                    ❌
+                    {{ t.get(
+                        'not_found',
+                        'Product Not Found'
+                    ) }}
+
+                </h2>
+
+
+                <p>
+
+                    {{ t.get(
+                        'not_found_description',
+                        'This Product ID is not registered in our system.'
+                    ) }}
+
+                </p>
+
+
+                <a
+                    href="{{ url_for('report') }}"
+                    class="report-button"
+                >
+
+                    🚨
+                    {{ t.get(
+                        'report_product',
+                        'Report This Product'
+                    ) }}
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+
+    <!-- ================================================== -->
+    <!-- BACK -->
+    <!-- ================================================== -->
+
+    <a
+        href="{{ url_for('home') }}"
+        class="back-button"
+    >
+
+        ←
+        {{ t.get(
+            'back',
+            'Back'
+        ) }}
+
+    </a>
+
+
+</div>
+
+
+<!-- ================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ================================================== -->
+
+<script>
+
+
+/* ================================================== */
+/* LANGUAGE */
+/* ================================================== */
+
+function changeLanguage(language) {
+
+    window.location.href =
+        "/set_language/" +
+        encodeURIComponent(language);
+
+}
+
+
+/* ================================================== */
+/* QR SCANNER */
+/* ================================================== */
+
+let scanner = null;
+
+
+function startScanner() {
+
+    const reader =
+        document.getElementById("reader");
+
+
+    reader.style.display = "block";
+
+
+    scanner =
+        new Html5Qrcode("reader");
+
+
+    scanner.start(
+
+        {
+            facingMode: "environment"
+        },
+
+        {
+            fps: 10,
+            qrbox: 250
+        },
+
+
+        function(decodedText) {
+
+
+            /*
+             * QR CODE CONTENT
+             *
+             * The QR code generated by the
+             * registered-product system contains
+             * either a Product ID or a verification URL.
+             */
+
+            let productId =
+                decodedText;
+
+
+            /*
+             * If the QR contains a verification URL,
+             * extract the product_id parameter.
+             */
+
+            try {
+
+                const url =
+                    new URL(decodedText);
+
+
+                const id =
+                    url.searchParams.get(
+                        "product_id"
+                    );
+
+
+                if (id) {
+
+                    productId = id;
+
+                }
+
+            } catch (error) {
+
+                /*
+                 * QR contains a normal Product ID.
+                 */
+
+            }
+
+
+            document.getElementById(
+                "product_id"
+            ).value = productId;
+
+
+            scanner.stop().then(function() {
+
+                reader.style.display =
+                    "none";
+
+
+                document.querySelector(
+                    "form"
+                ).submit();
+
+            });
+
+        },
+
+
+        function(errorMessage) {
+
+            /*
+             * QR not detected yet.
+             */
+
+        }
+
+    ).catch(function(error) {
+
+        alert(
+            "{{ t.get(
+                'camera_error',
+                'Unable to access the camera. Please allow camera permission and try again.'
+            ) }}"
+        );
+
+
+        reader.style.display =
+            "none";
+
+    });
+
+}
+
+</script>
+
+
+</body>
+
+</html>

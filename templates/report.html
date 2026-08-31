@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report Product</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .page-container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #198754;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .header p {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        .form-body {
+            padding: 35px;
+        }
+
+        .language-box {
+            background: white;
+            padding: 18px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.2rem rgba(25,135,84,0.15);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .required {
+            color: red;
+        }
+
+        .tip-box {
+            background: #fff3cd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .submit-btn {
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: #146c43;
+            color: white;
+        }
+
+        .back-btn {
+            padding: 13px;
+            border-radius: 10px;
+        }
+
+        .page-title {
+            font-size: 32px;
+        }
+
+        @media (max-width: 600px) {
+
+            .page-container {
+                margin: 15px auto;
+                padding: 10px;
+            }
+
+            .form-body {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page-container">
+
+
+    <!-- ===================================================== -->
+    <!-- LANGUAGE SELECTOR -->
+    <!-- ===================================================== -->
+
+    <div class="language-box">
+
+        <label class="form-label">
+
+            🌐
+            {{ t.get('select_language', 'Select Language') }}
+
+        </label>
+
+
+        <select
+            class="form-select"
+            onchange="changeLanguage(this.value)"
+        >
+
+            {% for language in languages %}
+
+                <option
+                    value="{{ language }}"
+                    {% if language == current_language %}
+                        selected
+                    {% endif %}
+                >
+
+                    {{ language }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CARD -->
+    <!-- ===================================================== -->
+
+    <div class="main-card">
+
+
+        <!-- ================================================= -->
+        <!-- HEADER -->
+        <!-- ================================================= -->
+
+        <div class="header">
+
+            <h1 class="page-title">
+
+                🚨
+                {{ t.get(
+                    'report_product_title',
+                    'Report Product'
+                ) }}
+
+            </h1>
+
+
+            <p>
+
+                {{ t.get(
+                    'report_product_subtitle',
+                    'Report a suspected fake or low-quality agricultural product.'
+                ) }}
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- FORM BODY -->
+        <!-- ================================================= -->
+
+        <div class="form-body">
+
+
+            <form method="POST">
+
+
+                <!-- ========================================= -->
+                <!-- PRODUCT TYPE -->
+                <!-- ========================================= -->
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+
+                        🌱
+                        {{ t.get(
+                            'product_type',
+                            'Product Type'
+                        ) }}
+
+                        <span class="required">*</span>
+
+                    </label>
+
+
+                    <select
+                        name="product_type"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+
+                            {{ t.get(
+                                'select_product_type',
+                                'Select Product Type'
+                            ) }}
+
+                        </option>
+
+
+                        <option value="Seed">
+
+                            🌱
+                            {{ t.get(
+                                'seed',
+                                'Seed'
+                            ) }}
+
+                        </option>
+
+
+                        <option value="Fertilizer">
+
+                            🧪
+                            {{ t.get(
+                                'fertilizer',
+                                'Fertilizer'
+                            ) }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- PRODUCT NAME -->
+                <!-- ========================================= -->
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+
+                        📦
+                        {{ t.get(
+                            'product_name',
+                            'Product Name'
+                        ) }}
+
+                        <span class="required">*</span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="product"
+                        class="form-control"
+                        placeholder="{{ t.get(
+                            'product_name_placeholder',
+                            'Enter the product name'
+                        ) }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- DEALER NAME -->
+                <!-- ========================================= -->
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+
+                        🏪
+                        {{ t.get(
+                            'dealer_name',
+                            'Dealer Name'
+                        ) }}
+
+                        <span class="required">*</span>
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        name="dealer"
+                        class="form-control"
+                        placeholder="{{ t.get(
+                            'dealer_name_placeholder',
+                            'Enter dealer or shop name'
+                        ) }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- COMPLAINT DESCRIPTION -->
+                <!-- ========================================= -->
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+
+                        📝
+                        {{ t.get(
+                            'complaint_description',
+                            'Complaint Description'
+                        ) }}
+
+                        <span class="required">*</span>
+
+                    </label>
+
+
+                    <textarea
+                        name="description"
+                        class="form-control"
+                        placeholder="{{ t.get(
+                            'complaint_description_placeholder',
+                            'Describe the problem with the product...'
+                        ) }}"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- INFORMATION / TIP -->
+                <!-- ========================================= -->
+
+                <div class="tip-box">
+
+                    <strong>
+
+                        💡
+                        {{ t.get(
+                            'tip',
+                            'Tip'
+                        ) }}:
+
+                    </strong>
+
+
+                    <span>
+
+                        {{ t.get(
+                            'report_product_tip',
+                            'Provide correct product and dealer details. Give a clear description of the problem to help us analyze the complaint.'
+                        ) }}
+
+                    </span>
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- SUBMIT -->
+                <!-- ========================================= -->
+
+                <button
+                    type="submit"
+                    class="submit-btn w-100 mt-4"
+                >
+
+                    🚨
+                    {{ t.get(
+                        'submit_complaint',
+                        'Submit Complaint'
+                    ) }}
+
+                </button>
+
+
+
+                <!-- ========================================= -->
+                <!-- BACK -->
+                <!-- ========================================= -->
+
+                <a
+                    href="{{ url_for('home') }}"
+                    class="btn btn-outline-secondary back-btn w-100 mt-3"
+                >
+
+                    ←
+                    {{ t.get(
+                        'back',
+                        'Back'
+                    ) }}
+
+                </a>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- LANGUAGE SCRIPT -->
+<!-- ========================================================= -->
+
+<script>
+
+function changeLanguage(language) {
+
+    window.location.href =
+        "/set_language/" +
+        encodeURIComponent(language);
+
+}
+
+</script>
+
+
+</body>
+
+</html>

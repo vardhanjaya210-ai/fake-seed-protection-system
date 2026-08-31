@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ t.title }}</title>
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #e8f5e9,
+                #f1f8e9
+            );
+            font-family: Arial, sans-serif;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 22px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            font-size: 65px;
+            margin-bottom: 10px;
+        }
+
+        .main-title {
+            color: #1b5e20;
+            font-weight: bold;
+            font-size: 32px;
+        }
+
+        .description {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .language-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .language-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .main-button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .how-to-use {
+            margin-top: 20px;
+            text-align: left;
+            border-radius: 12px;
+        }
+
+        .how-to-use h5 {
+            font-weight: bold;
+        }
+
+        .how-to-use li {
+            margin-bottom: 8px;
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        @media (max-width: 576px) {
+
+            .main-card {
+                padding: 25px;
+            }
+
+            .main-title {
+                font-size: 25px;
+            }
+
+            .logo {
+                font-size: 55px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="main-container">
+
+    <div class="main-card text-center">
+
+
+        <!-- ==================================================
+             LOGO
+             ================================================== -->
+
+        <div class="logo">
+            🌱
+        </div>
+
+
+        <!-- ==================================================
+             TITLE
+             ================================================== -->
+
+        <h1 class="main-title">
+
+            {{ t.title }}
+
+        </h1>
+
+
+        <!-- ==================================================
+             DESCRIPTION
+             ================================================== -->
+
+        <p class="description">
+
+            {{ t.home_description }}
+
+        </p>
+
+
+        <!-- ==================================================
+             LANGUAGE SELECTION
+             ================================================== -->
+
+        <div class="language-box text-start">
+
+            <label class="language-label">
+
+                🌐 {{ t.select_language }}
+
+            </label>
+
+
+            <select
+                class="form-select"
+                onchange="changeLanguage(this.value)"
+            >
+
+                {% for language in languages %}
+
+                    <option
+                        value="{{ language }}"
+                        {% if language == current_language %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ language }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- ==================================================
+             VERIFY PRODUCT BUTTON
+             ================================================== -->
+
+        <a
+            href="{{ url_for('verify') }}"
+            class="btn btn-success main-button"
+        >
+
+            {{ t.verify }}
+
+        </a>
+
+
+        <!-- ==================================================
+             REPORT PRODUCT BUTTON
+             ================================================== -->
+
+        <a
+            href="{{ url_for('report') }}"
+            class="btn btn-danger main-button"
+        >
+
+            {{ t.report }}
+
+        </a>
+
+
+        <!-- ==================================================
+             HOW TO USE BUTTON
+             ================================================== -->
+
+        <a
+            href="#howToUse"
+            class="btn btn-outline-success main-button"
+        >
+
+            {{ t.how_to_use }}
+
+        </a>
+
+
+        <!-- ==================================================
+             ADMIN LOGIN
+             ================================================== -->
+
+        <a
+            href="{{ url_for('login') }}"
+            class="btn btn-outline-primary w-100 py-2"
+        >
+
+            🔐 {{ t.admin_login }}
+
+        </a>
+
+
+        <!-- ==================================================
+             HOW TO USE INFORMATION
+             ================================================== -->
+
+        <div
+            id="howToUse"
+            class="alert alert-info how-to-use"
+        >
+
+            <h5>
+
+                📖 {{ t.how_to_use }}
+
+            </h5>
+
+
+            <hr>
+
+
+            <ol>
+
+                <!-- STEP 1 -->
+
+                <li>
+
+                    {{ t.step_verify }}
+
+                </li>
+
+
+                <!-- STEP 2 -->
+
+                <li>
+
+                    {{ t.step_scan }}
+
+                </li>
+
+
+                <!-- STEP 3 -->
+
+                <li>
+
+                    {{ t.step_report }}
+
+                </li>
+
+
+                <!-- STEP 4 -->
+
+                <li>
+
+                    {{ t.step_description }}
+
+                </li>
+
+            </ol>
+
+        </div>
+
+
+        <!-- ==================================================
+             FOOTER
+             ================================================== -->
+
+        <div class="footer-text">
+
+            🌱 {{ t.footer_text }}
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ==================================================
+     LANGUAGE CHANGE JAVASCRIPT
+     ================================================== -->
+
+<script>
+
+function changeLanguage(language) {
+
+    window.location.href =
+        "/set_language/" +
+        encodeURIComponent(language);
+
+}
+
+</script>
+
+
+</body>
+
+</html>
