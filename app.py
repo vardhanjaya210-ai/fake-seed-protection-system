@@ -145,6 +145,56 @@ def init_db():
     """)
 
 
+    # ========================================================
+    # ADD DEFAULT REGISTERED PRODUCTS
+    # ========================================================
+
+    default_products = [
+
+        (
+            'FS001',
+            'Paddy Seeds',
+            'ABC Seeds',
+            'B101',
+            'Genuine'
+        ),
+
+        (
+            'FS002',
+            'Groundnut Seeds',
+            'Green Agro',
+            'B202',
+            'Genuine'
+        ),
+
+        (
+            'FERT001',
+            'Urea Fertilizer',
+            'Agro India',
+            'U301',
+            'Genuine'
+        )
+
+    ]
+
+
+    cursor.executemany("""
+        INSERT OR IGNORE INTO products
+        (
+            product_id,
+            product_name,
+            company,
+            batch_no,
+            status
+        )
+        VALUES (?, ?, ?, ?, ?)
+    """, default_products)
+
+
+    # ========================================================
+    # SAVE DATABASE
+    # ========================================================
+
     conn.commit()
 
     conn.close()
@@ -1330,6 +1380,7 @@ def delete(id):
         DELETE FROM complaints
 
         WHERE id = ?
+
     """, (
         id,
     ))
@@ -1346,13 +1397,17 @@ def delete(id):
 
 
 # ============================================================
-# RUN APPLICATION
+# INITIALIZE DATABASE
+# ============================================================
+
+init_db()
+
+
+# ============================================================
+# RUN APPLICATION LOCALLY
 # ============================================================
 
 if __name__ == "__main__":
-
-    init_db()
-
 
     app.run(
 
