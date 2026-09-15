@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Voice / Text Complaint</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #e8f5e9,
+                #f1f8e9
+            );
+            font-family: Arial, sans-serif;
+        }
+
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            border-radius: 22px;
+            padding: 35px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .title {
+            color: #1b5e20;
+            font-weight: bold;
+        }
+
+        .user-box {
+            background: #f1f8e9;
+            border: 1px solid #c8e6c9;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .option-box {
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .option-title {
+            color: #1b5e20;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: #2e7d32;
+            color: white;
+            font-size: 45px;
+            display: block;
+            margin: 20px auto;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .mic-button:hover {
+            background: #1b5e20;
+        }
+
+        .mic-button:disabled {
+            background: #9e9e9e;
+            cursor: not-allowed;
+        }
+
+        .mic-button.listening {
+            background: #d32f2f;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+
+        }
+
+        .status-text {
+            text-align: center;
+            font-weight: bold;
+            min-height: 25px;
+        }
+
+        .complaint-text {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            width: 100%;
+            padding: 11px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .tip {
+            background: #fff8e1;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="main-container">
+
+    <div class="main-card">
+
+        <div class="text-center">
+
+            <div style="font-size:55px;">
+                🌾
+            </div>
+
+            <h2 class="title">
+                🎤 Voice / Text Complaint
+            </h2>
+
+            <p class="text-muted">
+                Report a suspicious seed or fertilizer using your voice or by typing.
+            </p>
+
+        </div>
+
+
+        <!-- LANGUAGE -->
+
+        <div class="mb-3">
+
+            <label class="form-label fw-bold">
+                🌐 Select Language
+            </label>
+
+            <select
+                id="languageSelect"
+                class="form-select"
+            >
+
+                {% for language in languages %}
+
+                    <option
+                        value="{{ language }}"
+                        {% if language == current_language %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ language }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- USER -->
+
+        <div class="user-box">
+
+            <strong>
+                👤 Logged-in Farmer
+            </strong>
+
+            <br>
+
+            {{ logged_in_user }}
+
+        </div>
+
+
+        <!-- VOICE OPTION -->
+
+        <div class="option-box">
+
+            <h4 class="option-title">
+                🎤 Voice Complaint
+            </h4>
+
+            <p class="text-muted">
+                Speak naturally in your regional language.
+            </p>
+
+            <p>
+                You can tell the
+                <strong>
+                    product name, dealer name, village,
+                    problem, batch number, and other details
+                </strong>
+                in your speech.
+            </p>
+
+
+            <button
+                type="button"
+                id="micButton"
+                class="mic-button"
+            >
+                🎤
+            </button>
+
+
+            <div
+                id="statusText"
+                class="status-text text-muted"
+            >
+                Tap the microphone and start speaking.
+            </div>
+
+        </div>
+
+
+        <!-- TEXT OPTION -->
+
+        <div class="option-box">
+
+            <h4 class="option-title">
+                📝 Text Complaint
+            </h4>
+
+            <p class="text-muted">
+                If you prefer typing, enter your complete complaint below.
+            </p>
+
+            <textarea
+                id="description"
+                name="description"
+                class="form-control complaint-text"
+                placeholder="Example: I purchased paddy seeds from Ramesh dealer. The product is ABC Paddy Seeds. The seeds are not germinating properly. Please check this complaint."
+                required
+            ></textarea>
+
+
+            <div class="tip">
+
+                💡 <strong>Tip:</strong>
+
+                You can include the product name,
+                dealer name, village, batch number,
+                and the problem you faced.
+
+            </div>
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <form
+            method="POST"
+            action="{{ url_for('report') }}"
+            onsubmit="return prepareComplaint();"
+        >
+
+            <input
+                type="hidden"
+                name="product_type"
+                value="Seeds"
+            >
+
+            <input
+                type="hidden"
+                name="product"
+                value="Voice/Text Complaint"
+            >
+
+            <input
+                type="hidden"
+                name="dealer"
+                value="Not specified"
+            >
+
+            <input
+                type="hidden"
+                name="description"
+                id="hiddenDescription"
+            >
+
+
+            <button
+                type="submit"
+                class="btn btn-success submit-button"
+            >
+
+                🚨 Submit Complaint
+
+            </button>
+
+        </form>
+
+
+        <!-- BACK -->
+
+        <a
+            href="{{ url_for('home') }}"
+            class="btn btn-outline-secondary back-button"
+        >
+
+            ⬅️ Back to Home
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+const micButton =
+    document.getElementById("micButton");
+
+
+const description =
+    document.getElementById("description");
+
+
+const statusText =
+    document.getElementById("statusText");
+
+
+const languageSelect =
+    document.getElementById("languageSelect");
+
+
+const speechLanguages = {
+
+    "English": "en-IN",
+
+    "Telugu": "te-IN",
+
+    "Hindi": "hi-IN",
+
+    "Tamil": "ta-IN",
+
+    "Kannada": "kn-IN",
+
+    "Malayalam": "ml-IN",
+
+    "Marathi": "mr-IN",
+
+    "Bengali": "bn-IN",
+
+    "Gujarati": "gu-IN",
+
+    "Punjabi": "pa-IN",
+
+    "Odia": "or-IN"
+
+};
+
+
+let recognition = null;
+
+let isListening = false;
+
+let shouldContinue = false;
+
+
+if (!SpeechRecognition) {
+
+    micButton.disabled = true;
+
+    statusText.innerText =
+        "❌ Voice recognition is not supported in this browser.";
+
+} else {
+
+    micButton.addEventListener(
+        "click",
+        toggleVoice
+    );
+
+}
+
+
+function toggleVoice() {
+
+    if (isListening) {
+
+        stopVoice();
+
+    } else {
+
+        startVoice();
+
+    }
+
+}
+
+
+function startVoice() {
+
+    if (!SpeechRecognition) {
+
+        return;
+
+    }
+
+
+    recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang =
+        speechLanguages[languageSelect.value] ||
+        "en-IN";
+
+
+    recognition.continuous = true;
+
+    recognition.interimResults = true;
+
+    recognition.maxAlternatives = 1;
+
+
+    shouldContinue = true;
+
+    isListening = true;
+
+
+    micButton.classList.add("listening");
+
+    micButton.innerText = "⏹️";
+
+
+    statusText.innerText =
+        "🎤 Listening... Speak your complete complaint.";
+
+
+    recognition.onstart = function() {
+
+        isListening = true;
+
+        micButton.classList.add("listening");
+
+        micButton.innerText = "⏹️";
+
+        statusText.innerText =
+            "🎤 Listening... Speak your complete complaint.";
+
+    };
+
+
+    recognition.onresult = function(event) {
+
+        let finalText = "";
+
+        let interimText = "";
+
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+
+            const transcript =
+                event.results[i][0].transcript;
+
+
+            if (event.results[i].isFinal) {
+
+                finalText += transcript + " ";
+
+            } else {
+
+                interimText += transcript;
+
+            }
+
+        }
+
+
+        if (finalText.trim() !== "") {
+
+            if (description.value.trim() !== "") {
+
+                description.value +=
+                    " " + finalText.trim();
+
+            } else {
+
+                description.value =
+                    finalText.trim();
+
+            }
+
+        }
+
+
+        if (interimText.trim() !== "") {
+
+            statusText.innerText =
+                "🎤 " + interimText;
+
+        }
+
+    };
+
+
+    recognition.onerror = function(event) {
+
+        console.log(
+            "Speech recognition error:",
+            event.error
+        );
+
+
+        if (event.error === "not-allowed") {
+
+            shouldContinue = false;
+
+            statusText.innerText =
+                "❌ Microphone permission denied. Please allow microphone access.";
+
+        }
+
+        else if (event.error === "audio-capture") {
+
+            shouldContinue = false;
+
+            statusText.innerText =
+                "❌ Microphone could not be accessed.";
+
+        }
+
+        else if (event.error === "no-speech") {
+
+            statusText.innerText =
+                "⚠️ No speech detected. Please continue speaking.";
+
+        }
+
+        else if (event.error === "network") {
+
+            shouldContinue = false;
+
+            statusText.innerText =
+                "❌ Network error. Please check your internet connection.";
+
+        }
+
+        else {
+
+            statusText.innerText =
+                "❌ Voice recognition error: " +
+                event.error;
+
+        }
+
+    };
+
+
+    recognition.onend = function() {
+
+        if (shouldContinue) {
+
+            statusText.innerText =
+                "🎤 Reconnecting microphone...";
+
+
+            setTimeout(function() {
+
+                try {
+
+                    recognition.start();
+
+                } catch (error) {
+
+                    console.log(error);
+
+                }
+
+            }, 300);
+
+        }
+
+        else {
+
+            isListening = false;
+
+            micButton.classList.remove("listening");
+
+            micButton.innerText = "🎤";
+
+
+            if (description.value.trim() !== "") {
+
+                statusText.innerText =
+                    "✅ Speech captured. You can edit the complaint before submitting.";
+
+            }
+
+            else {
+
+                statusText.innerText =
+                    "Tap the microphone and start speaking.";
+
+            }
+
+        }
+
+    };
+
+
+    try {
+
+        recognition.start();
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+        isListening = false;
+
+        shouldContinue = false;
+
+        micButton.classList.remove("listening");
+
+        micButton.innerText = "🎤";
+
+        statusText.innerText =
+            "❌ Could not start microphone. Please try again.";
+
+    }
+
+}
+
+
+function stopVoice() {
+
+    shouldContinue = false;
+
+    isListening = false;
+
+
+    if (recognition) {
+
+        try {
+
+            recognition.stop();
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    micButton.classList.remove("listening");
+
+    micButton.innerText = "🎤";
+
+
+    if (description.value.trim() !== "") {
+
+        statusText.innerText =
+            "✅ Recording stopped. Check your complaint text.";
+
+    }
+
+    else {
+
+        statusText.innerText =
+            "Recording stopped.";
+
+    }
+
+}
+
+
+languageSelect.addEventListener(
+    "change",
+    function() {
+
+        if (isListening) {
+
+            stopVoice();
+
+            statusText.innerText =
+                "Language changed. Tap the microphone to start again.";
+
+        }
+
+    }
+);
+
+
+function prepareComplaint() {
+
+    const text =
+        description.value.trim();
+
+
+    if (text === "") {
+
+        alert(
+            "Please speak or type your complaint before submitting."
+        );
+
+        return false;
+
+    }
+
+
+    document.getElementById(
+        "hiddenDescription"
+    ).value = text;
+
+
+    return true;
+
+}
+
+</script>
+
+
+</body>
+
+</html>

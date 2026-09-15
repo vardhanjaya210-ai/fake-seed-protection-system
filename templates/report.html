@@ -1,500 +1,302 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Report Product</title>
+    <title>{{ t.report_product }}</title>
 
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
     <style>
 
         body {
-            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
+            background: #f4f7f6;
         }
 
-        .page-container {
-            max-width: 850px;
+        .report-container {
+            max-width: 650px;
             margin: 40px auto;
-            padding: 20px;
         }
 
-        .main-card {
+        .report-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            overflow: hidden;
-        }
-
-        .header {
-            background: #198754;
-            color: white;
             padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-weight: bold;
-        }
-
-        .header p {
-            margin-top: 10px;
-            margin-bottom: 0;
-        }
-
-        .form-body {
-            padding: 35px;
-        }
-
-        .language-box {
-            background: white;
-            padding: 18px;
-            border-radius: 15px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .form-control,
-        .form-select {
-            padding: 13px;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #198754;
-            box-shadow: 0 0 0 0.2rem rgba(25,135,84,0.15);
-        }
-
-        textarea.form-control {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .required {
-            color: red;
-        }
-
-        .tip-box {
-            background: #fff3cd;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-
-        .submit-btn {
-            background: #198754;
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .submit-btn:hover {
-            background: #146c43;
-            color: white;
-        }
-
-        .back-btn {
-            padding: 13px;
-            border-radius: 10px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.10);
         }
 
         .page-title {
-            font-size: 32px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 8px;
         }
 
-        @media (max-width: 600px) {
+        .subtitle {
+            text-align: center;
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
 
-            .page-container {
-                margin: 15px auto;
-                padding: 10px;
-            }
+        .user-box {
+            background: #e8f5e9;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
 
-            .form-body {
-                padding: 20px;
-            }
+        textarea {
+            min-height: 130px;
+        }
 
-            .page-title {
-                font-size: 26px;
-            }
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            font-weight: bold;
+        }
 
+        .back-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .success-box {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
     </style>
 
 </head>
 
-
 <body>
 
+<div class="container report-container">
 
-<div class="page-container">
+    <div class="report-card">
 
+        <h2 class="page-title">
+            🚨 {{ t.report_product }}
+        </h2>
 
-    <!-- ===================================================== -->
-    <!-- LANGUAGE SELECTOR -->
-    <!-- ===================================================== -->
-
-    <div class="language-box">
-
-        <label class="form-label">
-
-            🌐
-            {{ t.get('select_language', 'Select Language') }}
-
-        </label>
+        <p class="subtitle">
+            {{ t.home_description }}
+        </p>
 
 
-        <select
-            class="form-select"
-            onchange="changeLanguage(this.value)"
-        >
+        <!-- Logged-in user -->
 
-            {% for language in languages %}
+        {% if is_user_logged_in %}
 
-                <option
-                    value="{{ language }}"
-                    {% if language == current_language %}
-                        selected
-                    {% endif %}
-                >
+        <div class="user-box">
 
-                    {{ language }}
+            <strong>👤 Logged-in User</strong>
 
-                </option>
+            <br>
 
-            {% endfor %}
+            <span>
+                {{ logged_in_user }}
+            </span>
 
-        </select>
+            {% if session.get('user_mobile') %}
+            <br>
+            <small class="text-muted">
+                {{ session.get('user_mobile') }}
+            </small>
+            {% endif %}
 
-    </div>
+        </div>
 
-
-
-    <!-- ===================================================== -->
-    <!-- MAIN CARD -->
-    <!-- ===================================================== -->
-
-    <div class="main-card">
+        {% endif %}
 
 
-        <!-- ================================================= -->
-        <!-- HEADER -->
-        <!-- ================================================= -->
+        <!-- Complaint submitted -->
 
-        <div class="header">
+        {% if complaint_submitted %}
 
-            <h1 class="page-title">
+        <div class="alert alert-success success-box">
 
-                🚨
-                {{ t.get(
-                    'report_product_title',
-                    'Report Product'
-                ) }}
+            <h5>✅ Complaint Submitted Successfully</h5>
 
-            </h1>
-
-
-            <p>
-
-                {{ t.get(
-                    'report_product_subtitle',
-                    'Report a suspected fake or low-quality agricultural product.'
-                ) }}
-
+            <p class="mb-2">
+                Your complaint has been registered.
             </p>
 
+            {% if complaint_id %}
+            <p class="mb-2">
+                <strong>Complaint ID:</strong>
+                #{{ complaint_id }}
+            </p>
+            {% endif %}
+
+            {% if ai_risk %}
+            <p class="mb-2">
+                <strong>{{ t.ai_risk }}:</strong>
+                {{ ai_risk }}
+            </p>
+            {% endif %}
+
+            {% if ai_issue %}
+            <p class="mb-0">
+                <strong>{{ t.ai_issue }}:</strong>
+                {{ ai_issue }}
+            </p>
+            {% endif %}
+
         </div>
 
-
-
-        <!-- ================================================= -->
-        <!-- FORM BODY -->
-        <!-- ================================================= -->
-
-        <div class="form-body">
-
-
-            <form method="POST">
-
-
-                <!-- ========================================= -->
-                <!-- PRODUCT TYPE -->
-                <!-- ========================================= -->
-
-                <div class="mb-4">
-
-                    <label class="form-label">
-
-                        🌱
-                        {{ t.get(
-                            'product_type',
-                            'Product Type'
-                        ) }}
-
-                        <span class="required">*</span>
-
-                    </label>
-
-
-                    <select
-                        name="product_type"
-                        class="form-select"
-                        required
-                    >
-
-                        <option value="">
-
-                            {{ t.get(
-                                'select_product_type',
-                                'Select Product Type'
-                            ) }}
-
-                        </option>
-
-
-                        <option value="Seed">
-
-                            🌱
-                            {{ t.get(
-                                'seed',
-                                'Seed'
-                            ) }}
-
-                        </option>
-
-
-                        <option value="Fertilizer">
-
-                            🧪
-                            {{ t.get(
-                                'fertilizer',
-                                'Fertilizer'
-                            ) }}
-
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-
-                <!-- ========================================= -->
-                <!-- PRODUCT NAME -->
-                <!-- ========================================= -->
-
-                <div class="mb-4">
-
-                    <label class="form-label">
-
-                        📦
-                        {{ t.get(
-                            'product_name',
-                            'Product Name'
-                        ) }}
-
-                        <span class="required">*</span>
-
-                    </label>
-
-
-                    <input
-                        type="text"
-                        name="product"
-                        class="form-control"
-                        placeholder="{{ t.get(
-                            'product_name_placeholder',
-                            'Enter the product name'
-                        ) }}"
-                        required
-                    >
-
-                </div>
-
-
-
-                <!-- ========================================= -->
-                <!-- DEALER NAME -->
-                <!-- ========================================= -->
-
-                <div class="mb-4">
-
-                    <label class="form-label">
-
-                        🏪
-                        {{ t.get(
-                            'dealer_name',
-                            'Dealer Name'
-                        ) }}
-
-                        <span class="required">*</span>
-
-                    </label>
-
-
-                    <input
-                        type="text"
-                        name="dealer"
-                        class="form-control"
-                        placeholder="{{ t.get(
-                            'dealer_name_placeholder',
-                            'Enter dealer or shop name'
-                        ) }}"
-                        required
-                    >
-
-                </div>
-
-
-
-                <!-- ========================================= -->
-                <!-- COMPLAINT DESCRIPTION -->
-                <!-- ========================================= -->
-
-                <div class="mb-4">
-
-                    <label class="form-label">
-
-                        📝
-                        {{ t.get(
-                            'complaint_description',
-                            'Complaint Description'
-                        ) }}
-
-                        <span class="required">*</span>
-
-                    </label>
-
-
-                    <textarea
-                        name="description"
-                        class="form-control"
-                        placeholder="{{ t.get(
-                            'complaint_description_placeholder',
-                            'Describe the problem with the product...'
-                        ) }}"
-                        required
-                    ></textarea>
-
-                </div>
-
-
-
-                <!-- ========================================= -->
-                <!-- INFORMATION / TIP -->
-                <!-- ========================================= -->
-
-                <div class="tip-box">
-
-                    <strong>
-
-                        💡
-                        {{ t.get(
-                            'tip',
-                            'Tip'
-                        ) }}:
-
-                    </strong>
-
-
-                    <span>
-
-                        {{ t.get(
-                            'report_product_tip',
-                            'Provide correct product and dealer details. Give a clear description of the problem to help us analyze the complaint.'
-                        ) }}
-
-                    </span>
-
-                </div>
-
-
-
-                <!-- ========================================= -->
-                <!-- SUBMIT -->
-                <!-- ========================================= -->
-
-                <button
-                    type="submit"
-                    class="submit-btn w-100 mt-4"
-                >
-
-                    🚨
-                    {{ t.get(
-                        'submit_complaint',
-                        'Submit Complaint'
-                    ) }}
-
-                </button>
-
-
-
-                <!-- ========================================= -->
-                <!-- BACK -->
-                <!-- ========================================= -->
-
-                <a
-                    href="{{ url_for('home') }}"
-                    class="btn btn-outline-secondary back-btn w-100 mt-3"
-                >
-
-                    ←
-                    {{ t.get(
-                        'back',
-                        'Back'
-                    ) }}
-
-                </a>
-
-
-            </form>
+        <div class="d-grid gap-2">
+
+            <a
+                href="{{ url_for('my_complaints') }}"
+                class="btn btn-primary"
+            >
+                📋 My Complaint Status
+            </a>
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-secondary"
+            >
+                {{ t.home }}
+            </a>
 
         </div>
+
+        {% else %}
+
+
+        <!-- Report form -->
+
+        <form method="POST">
+
+
+            <!-- Product Type -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                    {{ t.product_type }}
+                </label>
+
+                <select
+                    name="product_type"
+                    class="form-select"
+                    required
+                >
+
+                    <option value="">
+                        {{ t.product_type }}
+                    </option>
+
+                    <option value="Seeds">
+                        🌱 {{ t.seeds }}
+                    </option>
+
+                    <option value="Fertilizer">
+                        🧪 {{ t.fertilizer }}
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Product Name -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                    {{ t.product_name }}
+                </label>
+
+                <input
+                    type="text"
+                    name="product"
+                    class="form-control"
+                    placeholder="{{ t.product_name }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Dealer Name -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                    {{ t.dealer_name }}
+                </label>
+
+                <input
+                    type="text"
+                    name="dealer"
+                    class="form-control"
+                    placeholder="{{ t.dealer_name }}"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Complaint Description -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-bold">
+                    {{ t.description }}
+                </label>
+
+                <textarea
+                    name="description"
+                    class="form-control"
+                    placeholder="{{ t.description }}"
+                    required
+                ></textarea>
+
+                <div class="form-text">
+                    {{ t.step_description }}
+                </div>
+
+            </div>
+
+
+            <!-- Submit -->
+
+            <button
+                type="submit"
+                class="btn btn-danger submit-btn"
+            >
+                🚨 {{ t.submit }}
+            </button>
+
+        </form>
+
+
+        <!-- Navigation -->
+
+        <a
+            href="{{ url_for('home') }}"
+            class="btn btn-secondary back-btn"
+        >
+            {{ t.back }}
+        </a>
+
+        {% endif %}
 
     </div>
 
 </div>
 
-
-
-<!-- ========================================================= -->
-<!-- LANGUAGE SCRIPT -->
-<!-- ========================================================= -->
-
-<script>
-
-function changeLanguage(language) {
-
-    window.location.href =
-        "/set_language/" +
-        encodeURIComponent(language);
-
-}
-
-</script>
-
-
 </body>
 
 </html>
+```

@@ -1,17 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import os
-
-# ============================================================
-# TRANSLATIONS
-# ============================================================
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from translations import TRANSLATIONS
 
-
-# ============================================================
-# FLASK APPLICATION
-# ============================================================
 
 app = Flask(__name__)
 
@@ -23,10 +16,6 @@ PASSWORD = "1234"
 DATABASE = "complaints.db"
 
 
-# ============================================================
-# DATABASE CONNECTION
-# ============================================================
-
 def get_db():
 
     conn = sqlite3.connect(DATABASE)
@@ -36,20 +25,11 @@ def get_db():
     return conn
 
 
-# ============================================================
-# DATABASE INITIALIZATION
-# ============================================================
-
 def init_db():
 
     conn = sqlite3.connect(DATABASE)
 
     cursor = conn.cursor()
-
-
-    # ========================================================
-    # COMPLAINTS TABLE
-    # ========================================================
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS complaints (
@@ -70,15 +50,12 @@ def init_db():
 
             ai_reason TEXT,
 
-            status TEXT DEFAULT 'Pending'
+            status TEXT DEFAULT 'Pending',
+
+            user_id INTEGER
 
         )
     """)
-
-
-    # ========================================================
-    # ADD MISSING COLUMNS TO OLD DATABASE
-    # ========================================================
 
     columns_to_add = {
 
@@ -90,10 +67,11 @@ def init_db():
 
         "ai_reason": "TEXT",
 
-        "status": "TEXT DEFAULT 'Pending'"
+        "status": "TEXT DEFAULT 'Pending'",
+
+        "user_id": "INTEGER"
 
     }
-
 
     for column, definition in columns_to_add.items():
 
@@ -106,11 +84,6 @@ def init_db():
         except sqlite3.OperationalError:
 
             pass
-
-
-    # ========================================================
-    # PRODUCTS TABLE
-    # ========================================================
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS products (
@@ -130,10 +103,25 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
 
-    # ========================================================
-    # FIX OLD NULL STATUS VALUES
-    # ========================================================
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            name TEXT NOT NULL,
+
+            mobile TEXT UNIQUE NOT NULL,
+
+            password TEXT NOT NULL,
+
+            village TEXT,
+
+            mandal TEXT,
+
+            district TEXT
+
+        )
+    """)
 
     cursor.execute("""
         UPDATE complaints
@@ -143,11 +131,6 @@ def init_db():
         WHERE status IS NULL
            OR status = ''
     """)
-
-
-    # ========================================================
-    # ADD DEFAULT REGISTERED PRODUCTS
-    # ========================================================
 
     default_products = [
 
@@ -177,7 +160,6 @@ def init_db():
 
     ]
 
-
     cursor.executemany("""
         INSERT OR IGNORE INTO products
         (
@@ -190,19 +172,10 @@ def init_db():
         VALUES (?, ?, ?, ?, ?)
     """, default_products)
 
-
-    # ========================================================
-    # SAVE DATABASE
-    # ========================================================
-
     conn.commit()
 
     conn.close()
 
-
-# ============================================================
-# LANGUAGE SUPPORT
-# ============================================================
 
 @app.context_processor
 def inject_translations():
@@ -212,12 +185,10 @@ def inject_translations():
         "English"
     )
 
-
     translations = TRANSLATIONS.get(
         language,
         TRANSLATIONS["English"]
     )
-
 
     return {
 
@@ -225,14 +196,16 @@ def inject_translations():
 
         "current_language": language,
 
-        "languages": TRANSLATIONS.keys()
+        "languages": TRANSLATIONS.keys(),
+
+        "logged_in_user": session.get("user_name"),
+
+        "is_user_logged_in": "user_id" in session,
+
+        "is_admin_logged_in": "admin_user" in session
 
     }
 
-
-# ============================================================
-# CHANGE LANGUAGE
-# ============================================================
 
 @app.route("/set_language/<language>")
 def set_language(language):
@@ -241,25 +214,15 @@ def set_language(language):
 
         session["language"] = language
 
-
     return redirect(
         request.referrer or
         url_for("home")
     )
 
 
-# ============================================================
-# AI COMPLAINT ANALYSIS
-# ============================================================
-
 def analyze_complaint(description):
 
     text = description.lower()
-
-
-    # ========================================================
-    # HIGH RISK
-    # ========================================================
 
     high_risk_words = [
 
@@ -274,7 +237,6 @@ def analyze_complaint(description):
 
     ]
 
-
     for word in high_risk_words:
 
         if word in text:
@@ -288,11 +250,6 @@ def analyze_complaint(description):
                 "The complaint contains terms associated with a possible counterfeit or fraudulent product."
 
             )
-
-
-    # ========================================================
-    # GERMINATION
-    # ========================================================
 
     germination_words = [
 
@@ -309,7 +266,6 @@ def analyze_complaint(description):
 
     ]
 
-
     for word in germination_words:
 
         if word in text:
@@ -323,11 +279,6 @@ def analyze_complaint(description):
                 "The complaint indicates poor or unsuccessful seed germination."
 
             )
-
-
-    # ========================================================
-    # PACKAGING / LABEL
-    # ========================================================
 
     packaging_words = [
 
@@ -346,7 +297,6 @@ def analyze_complaint(description):
 
     ]
 
-
     for word in packaging_words:
 
         if word in text:
@@ -361,11 +311,6 @@ def analyze_complaint(description):
 
             )
 
-
-    # ========================================================
-    # FERTILIZER QUALITY
-    # ========================================================
-
     fertilizer_words = [
 
         "fertilizer quality",
@@ -377,7 +322,6 @@ def analyze_complaint(description):
         "low quality fertilizer"
 
     ]
-
 
     for word in fertilizer_words:
 
@@ -393,11 +337,6 @@ def analyze_complaint(description):
 
             )
 
-
-    # ========================================================
-    # GENERAL PRODUCT QUALITY
-    # ========================================================
-
     quality_words = [
 
         "bad quality",
@@ -411,7 +350,6 @@ def analyze_complaint(description):
         "wrong product"
 
     ]
-
 
     for word in quality_words:
 
@@ -427,11 +365,6 @@ def analyze_complaint(description):
 
             )
 
-
-    # ========================================================
-    # DEALER / SELLER
-    # ========================================================
-
     dealer_words = [
 
         "dealer cheated",
@@ -444,7 +377,6 @@ def analyze_complaint(description):
         "wrong product from dealer"
 
     ]
-
 
     for word in dealer_words:
 
@@ -460,11 +392,6 @@ def analyze_complaint(description):
 
             )
 
-
-    # ========================================================
-    # LOW RISK
-    # ========================================================
-
     return (
 
         "Low Risk",
@@ -476,10 +403,6 @@ def analyze_complaint(description):
     )
 
 
-# ============================================================
-# HOME
-# ============================================================
-
 @app.route("/")
 def home():
 
@@ -487,10 +410,6 @@ def home():
         "index.html"
     )
 
-
-# ============================================================
-# LOGIN
-# ============================================================
 
 @app.route(
     "/login",
@@ -510,54 +429,255 @@ def login():
             ""
         )
 
-
         if (
             username == USERNAME
             and password == PASSWORD
         ):
 
-            session["user"] = username
+            session["admin_user"] = username
 
             return redirect(
                 url_for("admin")
             )
 
-
         return "Invalid Login"
-
 
     return render_template(
         "login.html"
     )
 
 
-# ============================================================
-# LOGOUT
-# ============================================================
+@app.route(
+    "/register",
+    methods=["GET", "POST"]
+)
+def register():
 
-@app.route("/logout")
-def logout():
+    if request.method == "POST":
+
+        name = request.form.get(
+            "name",
+            ""
+        ).strip()
+
+        mobile = request.form.get(
+            "mobile",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        ).strip()
+
+        village = request.form.get(
+            "village",
+            ""
+        ).strip()
+
+        mandal = request.form.get(
+            "mandal",
+            ""
+        ).strip()
+
+        district = request.form.get(
+            "district",
+            ""
+        ).strip()
+
+        if not name or not mobile or not password:
+
+            return "Name, mobile number and password are required."
+
+        if not mobile.isdigit() or len(mobile) != 10:
+
+            return "Please enter a valid 10-digit mobile number."
+
+        hashed_password = generate_password_hash(
+            password
+        )
+
+        conn = get_db()
+
+        try:
+
+            conn.execute("""
+                INSERT INTO users
+                (
+                    name,
+                    mobile,
+                    password,
+                    village,
+                    mandal,
+                    district
+                )
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (
+
+                name,
+
+                mobile,
+
+                hashed_password,
+
+                village,
+
+                mandal,
+
+                district
+
+            ))
+
+            conn.commit()
+
+        except sqlite3.IntegrityError:
+
+            conn.close()
+
+            return "Mobile number already registered."
+
+        conn.close()
+
+        return redirect(
+            url_for("user_login")
+        )
+
+    return render_template(
+        "register.html"
+    )
+
+
+@app.route(
+    "/user_login",
+    methods=["GET", "POST"]
+)
+def user_login():
+
+    if request.method == "POST":
+
+        mobile = request.form.get(
+            "mobile",
+            ""
+        ).strip()
+
+        password = request.form.get(
+            "password",
+            ""
+        ).strip()
+
+        conn = get_db()
+
+        user = conn.execute("""
+            SELECT
+
+                id,
+
+                name,
+
+                mobile,
+
+                password,
+
+                village,
+
+                mandal,
+
+                district
+
+            FROM users
+
+            WHERE mobile = ?
+
+        """, (
+            mobile,
+        )).fetchone()
+
+        conn.close()
+
+        if user and check_password_hash(
+            user["password"],
+            password
+        ):
+
+            session["user_id"] = user["id"]
+
+            session["user_name"] = user["name"]
+
+            session["user_mobile"] = user["mobile"]
+
+            return redirect(
+                url_for("home")
+            )
+
+        return "Invalid mobile number or password."
+
+    return render_template(
+        "user_login.html"
+    )
+
+
+@app.route("/user_logout")
+def user_logout():
 
     session.pop(
-        "user",
+        "user_id",
         None
     )
 
+    session.pop(
+        "user_name",
+        None
+    )
+
+    session.pop(
+        "user_mobile",
+        None
+    )
 
     return redirect(
         url_for("home")
     )
 
 
-# ============================================================
-# REPORT PRODUCT / COMPLAINT
-# ============================================================
+@app.route("/logout")
+def logout():
+
+    session.pop(
+        "admin_user",
+        None
+    )
+
+    return redirect(
+        url_for("home")
+    )
+
+
+@app.route("/voice_complaint")
+def voice_complaint():
+
+    if "user_id" not in session:
+
+        return redirect(
+            url_for("user_login")
+        )
+
+    return render_template(
+        "voice_complaint.html",
+        complaint_submitted=False
+    )
+
 
 @app.route(
     "/report",
     methods=["GET", "POST"]
 )
 def report():
+
+    if "user_id" not in session:
+
+        return redirect(
+            url_for("user_login")
+        )
 
     if request.method == "POST":
 
@@ -566,42 +686,28 @@ def report():
             ""
         ).strip()
 
-
         product = request.form.get(
             "product",
             ""
         ).strip()
-
 
         dealer = request.form.get(
             "dealer",
             ""
         ).strip()
 
-
         description = request.form.get(
             "description",
             ""
         ).strip()
 
-
-        # ====================================================
-        # AI ANALYSIS
-        # ====================================================
-
         ai_risk, ai_issue, ai_reason = analyze_complaint(
             description
         )
 
-
-        # ====================================================
-        # SAVE COMPLAINT
-        # ====================================================
-
         conn = get_db()
 
-
-        conn.execute("""
+        cursor = conn.execute("""
             INSERT INTO complaints
             (
                 product_type,
@@ -611,10 +717,12 @@ def report():
                 ai_risk,
                 ai_issue,
                 ai_reason,
-                status
+                status,
+                user_id
             )
 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+
         """, (
 
             product_type,
@@ -631,29 +739,87 @@ def report():
 
             ai_reason,
 
-            "Pending"
+            "Pending",
+
+            session["user_id"]
 
         ))
 
+        complaint_id = cursor.lastrowid
 
         conn.commit()
 
         conn.close()
 
+        return render_template(
 
-        return redirect(
-            url_for("home")
+            "report.html",
+
+            complaint_submitted=True,
+
+            complaint_id=complaint_id,
+
+            ai_risk=ai_risk,
+
+            ai_issue=ai_issue
+
         )
-
 
     return render_template(
         "report.html"
     )
 
 
-# ============================================================
-# VERIFY PRODUCT
-# ============================================================
+@app.route("/my_complaints")
+def my_complaints():
+
+    if "user_id" not in session:
+
+        return redirect(
+            url_for("user_login")
+        )
+
+    conn = get_db()
+
+    complaints = conn.execute("""
+        SELECT
+
+            id,
+
+            product_type,
+
+            product,
+
+            dealer,
+
+            description,
+
+            ai_risk,
+
+            ai_issue,
+
+            status
+
+        FROM complaints
+
+        WHERE user_id = ?
+
+        ORDER BY id DESC
+
+    """, (
+        session["user_id"],
+    )).fetchall()
+
+    conn.close()
+
+    return render_template(
+
+        "my_complaints.html",
+
+        complaints=complaints
+
+    )
+
 
 @app.route(
     "/verify",
@@ -665,7 +831,6 @@ def verify():
 
     searched = False
 
-
     if request.method == "POST":
 
         product_id = request.form.get(
@@ -673,12 +838,9 @@ def verify():
             ""
         ).strip()
 
-
         searched = True
 
-
         conn = get_db()
-
 
         product = conn.execute("""
             SELECT
@@ -701,9 +863,7 @@ def verify():
             product_id,
         )).fetchone()
 
-
         conn.close()
-
 
     return render_template(
 
@@ -716,33 +876,23 @@ def verify():
     )
 
 
-# ============================================================
-# ADD REGISTERED PRODUCT + QR
-# ============================================================
-
 @app.route(
     "/add_product",
     methods=["GET", "POST"]
 )
 def add_product():
 
-    # ========================================================
-    # LOGIN REQUIRED
-    # ========================================================
-
-    if "user" not in session:
+    if "admin_user" not in session:
 
         return redirect(
             url_for("login")
         )
-
 
     registered_product = None
 
     qr_filename = None
 
     verification_url = None
-
 
     if request.method == "POST":
 
@@ -751,37 +901,27 @@ def add_product():
             ""
         ).strip()
 
-
         product_name = request.form.get(
             "product_name",
             ""
         ).strip()
-
 
         company = request.form.get(
             "company",
             ""
         ).strip()
 
-
         batch_no = request.form.get(
             "batch_no",
             ""
         ).strip()
-
 
         status = request.form.get(
             "status",
             ""
         ).strip()
 
-
-        # ====================================================
-        # SAVE PRODUCT
-        # ====================================================
-
         conn = get_db()
-
 
         try:
 
@@ -811,20 +951,13 @@ def add_product():
 
             ))
 
-
             conn.commit()
-
 
         except sqlite3.IntegrityError:
 
             conn.close()
 
             return "Product ID already exists."
-
-
-        # ====================================================
-        # GET REGISTERED PRODUCT
-        # ====================================================
 
         row = conn.execute("""
             SELECT
@@ -847,9 +980,7 @@ def add_product():
             product_id,
         )).fetchone()
 
-
         conn.close()
-
 
         if row:
 
@@ -867,19 +998,9 @@ def add_product():
 
             }
 
-
-        # ====================================================
-        # QR CODE
-        # ====================================================
-
         try:
 
             import qrcode
-
-
-            # ------------------------------------------------
-            # Verification URL
-            # ------------------------------------------------
 
             verification_url = url_for(
 
@@ -891,11 +1012,6 @@ def add_product():
 
             )
 
-
-            # ------------------------------------------------
-            # QR DIRECTORY
-            # ------------------------------------------------
-
             qr_directory = os.path.join(
 
                 "static",
@@ -904,7 +1020,6 @@ def add_product():
 
             )
 
-
             os.makedirs(
 
                 qr_directory,
@@ -912,11 +1027,6 @@ def add_product():
                 exist_ok=True
 
             )
-
-
-            # ------------------------------------------------
-            # QR FILE
-            # ------------------------------------------------
 
             qr_filename = (
 
@@ -929,7 +1039,6 @@ def add_product():
 
             )
 
-
             qr_path = os.path.join(
 
                 qr_directory,
@@ -938,24 +1047,17 @@ def add_product():
 
             )
 
-
-            # ------------------------------------------------
-            # CREATE QR
-            # ------------------------------------------------
-
             qr = qrcode.make(
 
                 verification_url
 
             )
 
-
             qr.save(
 
                 qr_path
 
             )
-
 
         except Exception as error:
 
@@ -964,9 +1066,7 @@ def add_product():
                 error
             )
 
-
             qr_filename = None
-
 
     return render_template(
 
@@ -981,17 +1081,12 @@ def add_product():
     )
 
 
-# ============================================================
-# QR VERIFICATION PAGE
-# ============================================================
-
 @app.route(
     "/verify_product/<product_id>"
 )
 def verify_product(product_id):
 
     conn = get_db()
-
 
     product = conn.execute("""
         SELECT
@@ -1014,9 +1109,7 @@ def verify_product(product_id):
         product_id,
     )).fetchone()
 
-
     conn.close()
-
 
     return render_template(
 
@@ -1029,52 +1122,31 @@ def verify_product(product_id):
     )
 
 
-# ============================================================
-# ADMIN DASHBOARD
-# ============================================================
-
 @app.route("/admin")
 def admin():
 
-    # ========================================================
-    # LOGIN CHECK
-    # ========================================================
-
-    if "user" not in session:
+    if "admin_user" not in session:
 
         return redirect(
             url_for("login")
         )
-
 
     search = request.args.get(
         "search",
         ""
     ).strip()
 
-
     status_filter = request.args.get(
         "status",
         ""
     ).strip()
 
-
     conn = get_db()
-
-
-    # ========================================================
-    # TOTAL COMPLAINTS
-    # ========================================================
 
     total = conn.execute("""
         SELECT COUNT(*)
         FROM complaints
     """).fetchone()[0]
-
-
-    # ========================================================
-    # PENDING COMPLAINTS
-    # ========================================================
 
     pending = conn.execute("""
         SELECT COUNT(*)
@@ -1082,21 +1154,11 @@ def admin():
         WHERE status = 'Pending'
     """).fetchone()[0]
 
-
-    # ========================================================
-    # UNDER REVIEW
-    # ========================================================
-
     under_review = conn.execute("""
         SELECT COUNT(*)
         FROM complaints
         WHERE status = 'Under Review'
     """).fetchone()[0]
-
-
-    # ========================================================
-    # VERIFIED
-    # ========================================================
 
     verified = conn.execute("""
         SELECT COUNT(*)
@@ -1104,21 +1166,11 @@ def admin():
         WHERE status = 'Verified'
     """).fetchone()[0]
 
-
-    # ========================================================
-    # REJECTED
-    # ========================================================
-
     rejected = conn.execute("""
         SELECT COUNT(*)
         FROM complaints
         WHERE status = 'Rejected'
     """).fetchone()[0]
-
-
-    # ========================================================
-    # RECENT
-    # ========================================================
 
     recent = conn.execute("""
         SELECT COUNT(*)
@@ -1133,46 +1185,47 @@ def admin():
             FROM complaints
 
         )
+
     """).fetchone()[0]
-
-
-    # ========================================================
-    # SEARCH + STATUS FILTER
-    # ========================================================
 
     query = """
         SELECT
 
-            id,
+            complaints.id,
 
-            product_type,
+            complaints.product_type,
 
-            product,
+            complaints.product,
 
-            dealer,
+            complaints.dealer,
 
-            description,
+            complaints.description,
 
-            ai_risk,
+            complaints.ai_risk,
 
-            ai_issue,
+            complaints.ai_issue,
 
-            ai_reason,
+            complaints.ai_reason,
 
-            status
+            complaints.status,
+
+            complaints.user_id,
+
+            users.name AS user_name,
+
+            users.mobile AS user_mobile
 
         FROM complaints
 
+        LEFT JOIN users
+
+        ON complaints.user_id = users.id
+
         WHERE 1 = 1
+
     """
 
-
     parameters = []
-
-
-    # ========================================================
-    # SEARCH
-    # ========================================================
 
     if search:
 
@@ -1180,23 +1233,29 @@ def admin():
 
             AND (
 
-                product LIKE ?
+                complaints.product LIKE ?
 
-                OR dealer LIKE ?
+                OR complaints.dealer LIKE ?
 
-                OR product_type LIKE ?
+                OR complaints.product_type LIKE ?
 
-                OR description LIKE ?
+                OR complaints.description LIKE ?
+
+                OR users.name LIKE ?
+
+                OR users.mobile LIKE ?
 
             )
 
         """
 
-
         search_value = "%" + search + "%"
 
-
         parameters.extend([
+
+            search_value,
+
+            search_value,
 
             search_value,
 
@@ -1208,35 +1267,23 @@ def admin():
 
         ])
 
-
-    # ========================================================
-    # STATUS FILTER
-    # ========================================================
-
     if status_filter:
 
         query += """
 
-            AND status = ?
+            AND complaints.status = ?
 
         """
-
 
         parameters.append(
             status_filter
         )
 
-
-    # ========================================================
-    # ORDER
-    # ========================================================
-
     query += """
 
-        ORDER BY id DESC
+        ORDER BY complaints.id DESC
 
     """
-
 
     complaints = conn.execute(
 
@@ -1246,9 +1293,7 @@ def admin():
 
     ).fetchall()
 
-
     conn.close()
-
 
     return render_template(
 
@@ -1275,32 +1320,22 @@ def admin():
     )
 
 
-# ============================================================
-# UPDATE COMPLAINT STATUS
-# ============================================================
-
 @app.route(
     "/update_status/<int:id>",
     methods=["POST"]
 )
 def update_status(id):
 
-    # ========================================================
-    # LOGIN REQUIRED
-    # ========================================================
-
-    if "user" not in session:
+    if "admin_user" not in session:
 
         return redirect(
             url_for("login")
         )
 
-
     new_status = request.form.get(
         "status",
         "Pending"
     ).strip()
-
 
     allowed_statuses = [
 
@@ -1314,18 +1349,11 @@ def update_status(id):
 
     ]
 
-
     if new_status not in allowed_statuses:
 
         new_status = "Pending"
 
-
-    # ========================================================
-    # UPDATE DATABASE
-    # ========================================================
-
     conn = get_db()
-
 
     conn.execute("""
         UPDATE complaints
@@ -1333,6 +1361,7 @@ def update_status(id):
         SET status = ?
 
         WHERE id = ?
+
     """, (
 
         new_status,
@@ -1341,40 +1370,30 @@ def update_status(id):
 
     ))
 
-
     conn.commit()
 
     conn.close()
 
-
     return redirect(
+
         request.referrer or
         url_for("admin")
+
     )
 
-
-# ============================================================
-# DELETE COMPLAINT
-# ============================================================
 
 @app.route(
     "/delete/<int:id>"
 )
 def delete(id):
 
-    # ========================================================
-    # LOGIN REQUIRED
-    # ========================================================
-
-    if "user" not in session:
+    if "admin_user" not in session:
 
         return redirect(
             url_for("login")
         )
 
-
     conn = get_db()
-
 
     conn.execute("""
         DELETE FROM complaints
@@ -1385,27 +1404,17 @@ def delete(id):
         id,
     ))
 
-
     conn.commit()
 
     conn.close()
-
 
     return redirect(
         url_for("admin")
     )
 
 
-# ============================================================
-# INITIALIZE DATABASE
-# ============================================================
-
 init_db()
 
-
-# ============================================================
-# RUN APPLICATION LOCALLY
-# ============================================================
 
 if __name__ == "__main__":
 
