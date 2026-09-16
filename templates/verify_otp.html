@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verify Account</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f4f7f6;
+        }
+
+        .otp-card {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 30px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+
+        .otp-input {
+            text-align: center;
+            font-size: 28px;
+            letter-spacing: 8px;
+            font-weight: bold;
+        }
+
+        .btn-verify {
+            width: 100%;
+        }
+
+        .email-box {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .demo-box {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .demo-otp {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #e65100;
+            margin: 5px 0;
+        }
+
+        .email-icon {
+            font-size: 45px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="otp-card">
+
+        <div class="text-center email-icon">
+            📧
+        </div>
+
+        <h2 class="title">
+            Verify Your Account
+        </h2>
+
+        <p class="text-center text-muted">
+            Enter the 6-digit OTP sent to your email address.
+        </p>
+
+
+        {% if verification_email %}
+
+        <div class="email-box">
+
+            <strong>
+                📧 Email OTP
+            </strong>
+
+            <div class="mt-2">
+                OTP sent to:
+            </div>
+
+            <strong>
+                {{ verification_email }}
+            </strong>
+
+            {% if email_otp_sent %}
+
+            <div class="text-success mt-2">
+                ✅ Email OTP sent successfully.
+            </div>
+
+            {% else %}
+
+            <div class="text-warning mt-2">
+                ⚠️ Email OTP could not be sent.
+            </div>
+
+            <small class="text-muted">
+                You can use the Demo OTP below.
+            </small>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        {% if message %}
+
+        <div class="alert alert-danger mt-3">
+            {{ message }}
+        </div>
+
+        {% endif %}
+
+
+        {% if error %}
+
+        <div class="alert alert-danger mt-3">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            <div class="mb-3 mt-3">
+
+                <label class="form-label fw-bold">
+                    Enter OTP
+                </label>
+
+                <input
+                    type="text"
+                    name="otp"
+                    class="form-control otp-input"
+                    placeholder="000000"
+                    maxlength="6"
+                    pattern="[0-9]{6}"
+                    inputmode="numeric"
+                    autocomplete="one-time-code"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-success btn-verify"
+            >
+                ✅ Verify OTP
+            </button>
+
+        </form>
+
+
+        {% if demo_otp %}
+
+        <div class="demo-box">
+
+            <div>
+                <strong>
+                    🧪 Demo OTP
+                </strong>
+            </div>
+
+            <div class="demo-otp">
+                {{ demo_otp }}
+            </div>
+
+            <small class="text-muted">
+                For project demonstration only.
+                This OTP is displayed because a real SMS
+                service is not connected.
+            </small>
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="text-center mt-3">
+
+            <a href="{{ url_for('resend_otp') }}">
+                🔄 Resend OTP
+            </a>
+
+        </div>
+
+
+        <div class="text-center mt-2">
+
+            <a href="{{ url_for('register') }}">
+                ← Back to Registration
+            </a>
+
+        </div>
+
+
+        <div class="text-center mt-2">
+
+            <a href="{{ url_for('home') }}">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const otpInput = document.querySelector(
+        'input[name="otp"]'
+    );
+
+    otpInput.addEventListener(
+        "input",
+        function() {
+
+            this.value = this.value
+                .replace(/\D/g, "")
+                .slice(0, 6);
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

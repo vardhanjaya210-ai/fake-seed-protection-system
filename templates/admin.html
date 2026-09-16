@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -9,7 +10,10 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>
-        {{ t.get('admin_dashboard', 'Admin Dashboard') }}
+        {{ t.get(
+            'admin_dashboard',
+            'Admin Dashboard'
+        ) }}
     </title>
 
 
@@ -30,26 +34,17 @@
     <style>
 
         body {
-
             background: #f4f8f3;
-
             font-family: Arial, sans-serif;
-
             margin: 0;
-
             padding: 0;
-
         }
 
 
         .container-main {
-
             max-width: 1400px;
-
             margin: 30px auto;
-
             padding: 20px;
-
         }
 
 
@@ -58,7 +53,6 @@
         ================================================== */
 
         .header-card {
-
             background: linear-gradient(
                 135deg,
                 #198754,
@@ -75,25 +69,18 @@
 
             box-shadow:
                 0 6px 20px rgba(0,0,0,0.12);
-
         }
 
 
         .header-card h1 {
-
             margin: 0;
-
             font-weight: bold;
-
         }
 
 
         .header-card p {
-
             margin-top: 8px;
-
             margin-bottom: 0;
-
         }
 
 
@@ -102,7 +89,6 @@
         ================================================== */
 
         .language-box {
-
             background: white;
 
             padding: 15px;
@@ -113,7 +99,6 @@
 
             box-shadow:
                 0 3px 12px rgba(0,0,0,0.08);
-
         }
 
 
@@ -122,7 +107,6 @@
         ================================================== */
 
         .stat-card {
-
             background: white;
 
             border-radius: 15px;
@@ -135,62 +119,47 @@
                 0 4px 15px rgba(0,0,0,0.08);
 
             height: 100%;
-
         }
 
 
         .stat-number {
-
             font-size: 32px;
 
             font-weight: bold;
 
             margin-top: 8px;
-
         }
 
 
         .stat-title {
-
             color: #666;
 
             font-weight: bold;
-
         }
 
 
         .stat-total {
-
             border-top: 5px solid #198754;
-
         }
 
 
         .stat-pending {
-
             border-top: 5px solid #ffc107;
-
         }
 
 
         .stat-review {
-
             border-top: 5px solid #0d6efd;
-
         }
 
 
         .stat-verified {
-
             border-top: 5px solid #198754;
-
         }
 
 
         .stat-rejected {
-
             border-top: 5px solid #dc3545;
-
         }
 
 
@@ -199,7 +168,6 @@
         ================================================== */
 
         .search-card {
-
             background: white;
 
             padding: 20px;
@@ -212,7 +180,6 @@
 
             box-shadow:
                 0 4px 15px rgba(0,0,0,0.08);
-
         }
 
 
@@ -221,7 +188,6 @@
         ================================================== */
 
         .complaint-card {
-
             background: white;
 
             border-radius: 15px;
@@ -232,25 +198,20 @@
                 0 4px 15px rgba(0,0,0,0.08);
 
             overflow: hidden;
-
         }
 
 
         .complaint-header {
-
             background: #f8f9fa;
 
             padding: 15px 20px;
 
             border-bottom: 1px solid #ddd;
-
         }
 
 
         .complaint-body {
-
             padding: 20px;
-
         }
 
 
@@ -259,7 +220,6 @@
         ================================================== */
 
         .info-box {
-
             background: #f8f9fa;
 
             padding: 15px;
@@ -267,14 +227,11 @@
             border-radius: 10px;
 
             height: 100%;
-
         }
 
 
         .info-box strong {
-
             color: #333;
-
         }
 
 
@@ -283,40 +240,80 @@
         ================================================== */
 
         .ai-box {
-
             padding: 15px;
 
             border-radius: 10px;
 
             margin-top: 15px;
-
         }
 
 
         .ai-high {
-
             background: #f8d7da;
 
             border-left: 5px solid #dc3545;
-
         }
 
 
         .ai-medium {
-
             background: #fff3cd;
 
             border-left: 5px solid #ffc107;
-
         }
 
 
         .ai-low {
-
             background: #d1e7dd;
 
             border-left: 5px solid #198754;
+        }
 
+
+        /* ==================================================
+           PRODUCT VALIDATION
+        ================================================== */
+
+        .validation-box {
+            padding: 15px;
+
+            border-radius: 10px;
+
+            margin-top: 15px;
+        }
+
+
+        .validation-match {
+            background: #d1e7dd;
+
+            border-left: 5px solid #198754;
+        }
+
+
+        .validation-mismatch {
+            background: #fff3cd;
+
+            border-left: 5px solid #ffc107;
+        }
+
+
+        .validation-not-found {
+            background: #f8d7da;
+
+            border-left: 5px solid #dc3545;
+        }
+
+
+        .validation-review {
+            background: #cfe2ff;
+
+            border-left: 5px solid #0d6efd;
+        }
+
+
+        .validation-neutral {
+            background: #f8f9fa;
+
+            border-left: 5px solid #6c757d;
         }
 
 
@@ -325,7 +322,6 @@
         ================================================== */
 
         .status-badge {
-
             display: inline-block;
 
             padding: 7px 12px;
@@ -335,43 +331,34 @@
             font-weight: bold;
 
             font-size: 13px;
-
         }
 
 
         .status-pending {
-
             background: #fff3cd;
 
             color: #856404;
-
         }
 
 
         .status-review {
-
             background: #cfe2ff;
 
             color: #084298;
-
         }
 
 
         .status-verified {
-
             background: #d1e7dd;
 
             color: #0f5132;
-
         }
 
 
         .status-rejected {
-
             background: #f8d7da;
 
             color: #842029;
-
         }
 
 
@@ -380,7 +367,6 @@
         ================================================== */
 
         .status-section {
-
             background: #f8f9fa;
 
             padding: 15px;
@@ -388,12 +374,10 @@
             border-radius: 10px;
 
             margin-top: 20px;
-
         }
 
 
         .status-form {
-
             display: flex;
 
             gap: 10px;
@@ -401,14 +385,11 @@
             align-items: center;
 
             flex-wrap: wrap;
-
         }
 
 
         .status-form select {
-
             min-width: 180px;
-
         }
 
 
@@ -417,7 +398,6 @@
         ================================================== */
 
         .description-box {
-
             background: #fff;
 
             border: 1px solid #ddd;
@@ -427,7 +407,6 @@
             border-radius: 10px;
 
             margin-top: 10px;
-
         }
 
 
@@ -436,7 +415,6 @@
         ================================================== */
 
         .action-buttons {
-
             margin-top: 15px;
 
             display: flex;
@@ -444,7 +422,6 @@
             gap: 10px;
 
             flex-wrap: wrap;
-
         }
 
 
@@ -453,7 +430,6 @@
         ================================================== */
 
         .empty-box {
-
             background: white;
 
             padding: 50px 20px;
@@ -464,14 +440,11 @@
 
             box-shadow:
                 0 4px 15px rgba(0,0,0,0.08);
-
         }
 
 
         .empty-icon {
-
             font-size: 50px;
-
         }
 
 
@@ -482,23 +455,19 @@
         @media (max-width: 768px) {
 
             .container-main {
-
                 padding: 10px;
 
                 margin: 15px auto;
-
             }
+
 
             .header-card {
-
                 padding: 20px;
-
             }
 
+
             .stat-number {
-
                 font-size: 26px;
-
             }
 
         }
@@ -523,6 +492,7 @@
         <label class="fw-bold mb-2">
 
             🌐
+
             {{ t.get(
                 'select_language',
                 'Select Language'
@@ -540,6 +510,7 @@
 
                 <option
                     value="{{ language }}"
+
                     {% if language == current_language %}
                         selected
                     {% endif %}
@@ -565,6 +536,7 @@
         <h1>
 
             🛡️
+
             {{ t.get(
                 'admin_dashboard',
                 'Admin Dashboard'
@@ -601,6 +573,7 @@
                 <div class="stat-title">
 
                     📊
+
                     {{ t.get(
                         'total_complaints',
                         'Total'
@@ -629,6 +602,7 @@
                 <div class="stat-title">
 
                     🟡
+
                     {{ t.get(
                         'pending',
                         'Pending'
@@ -657,6 +631,7 @@
                 <div class="stat-title">
 
                     🔵
+
                     {{ t.get(
                         'under_review',
                         'Under Review'
@@ -685,6 +660,7 @@
                 <div class="stat-title">
 
                     🟢
+
                     {{ t.get(
                         'verified_status',
                         'Verified'
@@ -713,6 +689,7 @@
                 <div class="stat-title">
 
                     🔴
+
                     {{ t.get(
                         'rejected',
                         'Rejected'
@@ -755,6 +732,7 @@
                     <label class="form-label fw-bold">
 
                         🔍
+
                         {{ t.get(
                             'search',
                             'Search'
@@ -765,9 +743,13 @@
 
                     <input
                         type="text"
+
                         name="search"
+
                         class="form-control"
+
                         value="{{ search }}"
+
                         placeholder="{{ t.get(
                             'search_placeholder',
                             'Search product, dealer, type or complaint...'
@@ -784,6 +766,7 @@
                     <label class="form-label fw-bold">
 
                         📋
+
                         {{ t.get(
                             'filter_status',
                             'Filter by Status'
@@ -809,12 +792,14 @@
 
                         <option
                             value="Pending"
+
                             {% if status_filter == 'Pending' %}
                                 selected
                             {% endif %}
                         >
 
                             🟡
+
                             {{ t.get(
                                 'pending',
                                 'Pending'
@@ -825,12 +810,14 @@
 
                         <option
                             value="Under Review"
+
                             {% if status_filter == 'Under Review' %}
                                 selected
                             {% endif %}
                         >
 
                             🔵
+
                             {{ t.get(
                                 'under_review',
                                 'Under Review'
@@ -841,12 +828,14 @@
 
                         <option
                             value="Verified"
+
                             {% if status_filter == 'Verified' %}
                                 selected
                             {% endif %}
                         >
 
                             🟢
+
                             {{ t.get(
                                 'verified_status',
                                 'Verified'
@@ -857,12 +846,14 @@
 
                         <option
                             value="Rejected"
+
                             {% if status_filter == 'Rejected' %}
                                 selected
                             {% endif %}
                         >
 
                             🔴
+
                             {{ t.get(
                                 'rejected',
                                 'Rejected'
@@ -885,6 +876,7 @@
                     >
 
                         🔍
+
                         {{ t.get(
                             'search',
                             'Search'
@@ -910,6 +902,7 @@
         <strong>
 
             📄
+
             {{ complaints|length }}
 
             {{ t.get(
@@ -949,6 +942,7 @@
                         <strong>
 
                             📝
+
                             {{ t.get(
                                 'complaint',
                                 'Complaint'
@@ -970,6 +964,7 @@
                             <span class="status-badge status-pending">
 
                                 🟡
+
                                 {{ t.get(
                                     'pending',
                                     'Pending'
@@ -983,6 +978,7 @@
                             <span class="status-badge status-review">
 
                                 🔵
+
                                 {{ t.get(
                                     'under_review',
                                     'Under Review'
@@ -996,6 +992,7 @@
                             <span class="status-badge status-verified">
 
                                 🟢
+
                                 {{ t.get(
                                     'verified_status',
                                     'Verified'
@@ -1009,6 +1006,7 @@
                             <span class="status-badge status-rejected">
 
                                 🔴
+
                                 {{ t.get(
                                     'rejected',
                                     'Rejected'
@@ -1022,6 +1020,7 @@
                             <span class="status-badge status-pending">
 
                                 🟡
+
                                 {{ complaint['status'] or 'Pending' }}
 
                             </span>
@@ -1053,11 +1052,13 @@
 
                         <div class="info-box">
 
+
                             <p>
 
                                 <strong>
 
                                     🏷️
+
                                     {{ t.get(
                                         'product_type',
                                         'Product Type'
@@ -1075,6 +1076,7 @@
                                 <strong>
 
                                     📦
+
                                     {{ t.get(
                                         'product_name',
                                         'Product Name'
@@ -1092,6 +1094,7 @@
                                 <strong>
 
                                     🏪
+
                                     {{ t.get(
                                         'dealer',
                                         'Dealer'
@@ -1102,6 +1105,7 @@
                                 {{ complaint['dealer'] }}
 
                             </p>
+
 
                         </div>
 
@@ -1135,6 +1139,7 @@
                             <h5>
 
                                 🤖
+
                                 {{ t.get(
                                     'ai_analysis',
                                     'AI Analysis'
@@ -1199,6 +1204,151 @@
 
 
                 <!-- ================================================== -->
+                <!-- PRODUCT VALIDATION -->
+                <!-- ================================================== -->
+
+                {% if complaint['validation_status'] == 'Database Match' %}
+
+                    <div class="validation-box validation-match">
+
+                {% elif complaint['validation_status'] == 'Information Mismatch' %}
+
+                    <div class="validation-box validation-mismatch">
+
+                {% elif complaint['validation_status'] == 'Product Not Found' %}
+
+                    <div class="validation-box validation-not-found">
+
+                {% elif complaint['validation_status'] == 'Registered Record Requires Review' %}
+
+                    <div class="validation-box validation-review">
+
+                {% else %}
+
+                    <div class="validation-box validation-neutral">
+
+                {% endif %}
+
+
+                        <h5>
+
+                            🔎
+
+                            {{ t.get(
+                                'product_validation',
+                                'Product Validation'
+                            ) }}
+
+                        </h5>
+
+
+                        <div class="row g-3">
+
+
+                            <div class="col-md-3">
+
+                                <strong>
+
+                                    🆔 Product ID
+
+                                </strong>
+
+                                <div class="mt-1">
+
+                                    {{ complaint['product_id'] or '-' }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <strong>
+
+                                    🏢 Company
+
+                                </strong>
+
+                                <div class="mt-1">
+
+                                    {{ complaint['company'] or '-' }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <strong>
+
+                                    🧾 Batch Number
+
+                                </strong>
+
+                                <div class="mt-1">
+
+                                    {{ complaint['batch_no'] or '-' }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <strong>
+
+                                    📊 Validation Status
+
+                                </strong>
+
+                                <div class="mt-1">
+
+                                    {{ complaint['validation_status'] or '-' }}
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <hr>
+
+
+                        <p>
+
+                            <strong>
+
+                                💡 Validation Reason:
+
+                            </strong>
+
+                            {{ complaint['validation_reason'] or '-' }}
+
+                        </p>
+
+
+                        <p class="mb-0">
+
+                            <strong>
+
+                                🛠️ Validation Method:
+
+                            </strong>
+
+                            {{ complaint['validation_method'] or '-' }}
+
+                        </p>
+
+
+                    </div>
+
+
+                <!-- ================================================== -->
                 <!-- DESCRIPTION -->
                 <!-- ================================================== -->
 
@@ -1207,6 +1357,7 @@
                     <strong>
 
                         📝
+
                         {{ t.get(
                             'description',
                             'Complaint Description'
@@ -1233,6 +1384,7 @@
                     <strong>
 
                         📋
+
                         {{ t.get(
                             'update_status',
                             'Update Complaint Status'
@@ -1243,10 +1395,12 @@
 
                     <form
                         method="POST"
+
                         action="{{ url_for(
                             'update_status',
                             id=complaint['id']
                         ) }}"
+
                         class="status-form mt-3"
                     >
 
@@ -1256,14 +1410,17 @@
                             class="form-select"
                         >
 
+
                             <option
                                 value="Pending"
+
                                 {% if complaint['status'] == 'Pending' %}
                                     selected
                                 {% endif %}
                             >
 
                                 🟡
+
                                 {{ t.get(
                                     'pending',
                                     'Pending'
@@ -1274,12 +1431,14 @@
 
                             <option
                                 value="Under Review"
+
                                 {% if complaint['status'] == 'Under Review' %}
                                     selected
                                 {% endif %}
                             >
 
                                 🔵
+
                                 {{ t.get(
                                     'under_review',
                                     'Under Review'
@@ -1290,12 +1449,14 @@
 
                             <option
                                 value="Verified"
+
                                 {% if complaint['status'] == 'Verified' %}
                                     selected
                                 {% endif %}
                             >
 
                                 🟢
+
                                 {{ t.get(
                                     'verified_status',
                                     'Verified'
@@ -1306,18 +1467,21 @@
 
                             <option
                                 value="Rejected"
+
                                 {% if complaint['status'] == 'Rejected' %}
                                     selected
                                 {% endif %}
                             >
 
                                 🔴
+
                                 {{ t.get(
                                     'rejected',
                                     'Rejected'
                                 ) }}
 
                             </option>
+
 
                         </select>
 
@@ -1328,6 +1492,7 @@
                         >
 
                             💾
+
                             {{ t.get(
                                 'update_status',
                                 'Update Status'
@@ -1353,11 +1518,14 @@
                             'delete',
                             id=complaint['id']
                         ) }}"
+
                         class="btn btn-outline-danger"
+
                         onclick="return confirmDelete();"
                     >
 
                         🗑️
+
                         {{ t.get(
                             'delete',
                             'Delete'
@@ -1427,10 +1595,12 @@
 
         <a
             href="{{ url_for('add_product') }}"
+
             class="btn btn-success me-2"
         >
 
             ➕
+
             {{ t.get(
                 'add_product',
                 'Add Registered Product'
@@ -1441,10 +1611,12 @@
 
         <a
             href="{{ url_for('home') }}"
+
             class="btn btn-outline-secondary me-2"
         >
 
             🏠
+
             {{ t.get(
                 'home',
                 'Home'
@@ -1455,16 +1627,19 @@
 
         <a
             href="{{ url_for('logout') }}"
+
             class="btn btn-outline-danger"
         >
 
             🚪
+
             {{ t.get(
                 'logout',
                 'Logout'
             ) }}
 
         </a>
+
 
     </div>
 
