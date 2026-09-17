@@ -20,8 +20,8 @@
         }
 
         .report-container {
-            max-width: 650px;
-            margin: 40px auto;
+            max-width: 700px;
+            margin: 30px auto;
         }
 
         .report-card {
@@ -50,14 +50,31 @@
             margin-bottom: 20px;
         }
 
+        .help-box {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 22px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #eeeeee;
+        }
+
         textarea {
-            min-height: 130px;
+            min-height: 140px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             font-weight: bold;
+            font-size: 17px;
         }
 
         .back-btn {
@@ -71,9 +88,86 @@
             margin-bottom: 20px;
         }
 
+        .result-card {
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 18px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        .risk-high {
+            background: #fdecea;
+            border-left: 5px solid #dc3545;
+        }
+
+        .risk-medium {
+            background: #fff8e1;
+            border-left: 5px solid #ffc107;
+        }
+
+        .risk-low {
+            background: #e8f5e9;
+            border-left: 5px solid #198754;
+        }
+
+        .info-label {
+            font-weight: bold;
+        }
+
+        .source-box {
+            background: #eef6ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 12px;
+        }
+
+        .source-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .source-name {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .source-link {
+            display: inline-block;
+            margin-top: 5px;
+            text-decoration: none;
+        }
+
+        .evidence-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            border-left: 3px solid #0d6efd;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 11px;
+        }
+
+        .required-note {
+            color: #dc3545;
+            font-size: 13px;
+        }
+
+        .optional-note {
+            color: #6c757d;
+            font-size: 13px;
+        }
+
     </style>
 
 </head>
+
 
 <body>
 
@@ -81,22 +175,24 @@
 
     <div class="report-card">
 
+        <!-- TITLE -->
+
         <h2 class="page-title">
             🚨 {{ t.report_product }}
         </h2>
 
         <p class="subtitle">
-            {{ t.home_description }}
+            Report suspicious seeds or fertilizers and help protect farmers.
         </p>
 
 
-        <!-- Logged-in user -->
+        <!-- LOGGED-IN FARMER -->
 
         {% if is_user_logged_in %}
 
         <div class="user-box">
 
-            <strong>👤 Logged-in User</strong>
+            <strong>👤 Logged-in Farmer</strong>
 
             <br>
 
@@ -109,7 +205,7 @@
             <br>
 
             <small class="text-muted">
-                {{ session.get('user_mobile') }}
+                📱 {{ session.get('user_mobile') }}
             </small>
 
             {% endif %}
@@ -119,17 +215,20 @@
         {% endif %}
 
 
-        <!-- Complaint submitted -->
+        <!-- SUCCESS -->
 
         {% if complaint_submitted %}
 
         <div class="alert alert-success success-box">
 
-            <h5>✅ Complaint Submitted Successfully</h5>
+            <h5>
+                ✅ Complaint Submitted Successfully
+            </h5>
 
             <p class="mb-2">
-                Your complaint has been registered.
+                Your complaint has been registered for review.
             </p>
+
 
             {% if complaint_id %}
 
@@ -172,15 +271,322 @@
         </div>
 
 
-        <div class="d-grid gap-2">
+        <!-- AI ANALYSIS -->
+
+        {% if ai_risk %}
+
+        <div class="result-card
+
+            {% if ai_risk == 'High Risk' %}
+                risk-high
+            {% elif ai_risk == 'Possible Risk' %}
+                risk-medium
+            {% else %}
+                risk-low
+            {% endif %}">
+
+            <h5>
+                🤖 AI Complaint Analysis
+            </h5>
+
+            <p class="mb-2">
+
+                <span class="info-label">
+                    Risk Level:
+                </span>
+
+                {{ ai_risk }}
+
+            </p>
+
+
+            {% if ai_issue %}
+
+            <p class="mb-0">
+
+                <span class="info-label">
+                    Reason:
+                </span>
+
+                {{ ai_issue }}
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- PRODUCT VALIDATION -->
+
+        {% if validation_status %}
+
+        <div class="result-card">
+
+            <h5>
+                🔎 Product Validation
+            </h5>
+
+            <p class="mb-2">
+
+                <span class="info-label">
+                    Status:
+                </span>
+
+                {{ validation_status }}
+
+            </p>
+
+
+            {% if validation_message %}
+
+            <p class="mb-0">
+                {{ validation_message }}
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- OFFICIAL AI RESEARCH -->
+
+        {% if research_result %}
+
+        <div class="result-card">
+
+            <h5>
+                🌐 Official-Source AI Research
+            </h5>
+
+
+            <!-- ASSESSMENT -->
+
+            {% if research_result.assessment %}
+
+            <p class="mb-2">
+
+                <span class="info-label">
+                    Assessment:
+                </span>
+
+                {{ research_result.assessment }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- CONFIDENCE -->
+
+            {% if research_result.confidence is not none %}
+
+            <p class="mb-2">
+
+                <span class="info-label">
+                    Confidence:
+                </span>
+
+                {{ research_result.confidence }}%
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- REASON -->
+
+            {% if research_result.reason %}
+
+            <p class="mb-2">
+
+                <span class="info-label">
+                    Reason:
+                </span>
+
+                {{ research_result.reason }}
+
+            </p>
+
+            {% endif %}
+
+
+            <!-- EVIDENCE -->
+
+            {% if research_result.evidence %}
+
+            <div class="source-box">
+
+                <strong>
+                    📚 Official Evidence
+                </strong>
+
+
+                {% for item in research_result.evidence %}
+
+                <div class="evidence-item">
+
+                    {% if item is mapping %}
+
+                        {% if item.source %}
+
+                        <div class="source-name">
+                            {{ item.source }}
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if item.relevant_information %}
+
+                        {% for information in item.relevant_information %}
+
+                        <div class="mb-2">
+                            {{ information }}
+                        </div>
+
+                        {% endfor %}
+
+                        {% endif %}
+
+
+                        {% if item.url %}
+
+                        <a
+                            href="{{ item.url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-sm btn-outline-primary mt-2"
+                        >
+                            🔗 View Official Source
+                        </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        {{ item }}
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- SOURCES -->
+
+            {% if research_result.sources %}
+
+            <div class="source-box">
+
+                <strong>
+                    🔗 Official Sources Used
+                </strong>
+
+
+                {% for source in research_result.sources %}
+
+                <div class="source-item">
+
+                    {% if source is mapping %}
+
+                        {% if source.source %}
+
+                        <div class="source-name">
+                            {{ source.source }}
+                        </div>
+
+                        {% elif source.name %}
+
+                        <div class="source-name">
+                            {{ source.name }}
+                        </div>
+
+                        {% elif source.title %}
+
+                        <div class="source-name">
+                            {{ source.title }}
+                        </div>
+
+                        {% else %}
+
+                        <div class="source-name">
+                            Official Government Source
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if source.url %}
+
+                        <a
+                            href="{{ source.url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-sm btn-outline-primary source-link"
+                        >
+                            🔗 View Official Source
+                        </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <div class="source-name">
+                            {{ source }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- LIMITATION -->
+
+            <div class="alert alert-warning mt-3 mb-0">
+
+                <strong>
+                    ⚠️ Important:
+                </strong>
+
+                <br>
+
+                This AI research provides supporting information only.
+                It does not by itself prove that a product is fake or genuine.
+                Final verification should be done through official product
+                records or the appropriate agricultural authority.
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- NAVIGATION -->
+
+        <div class="d-grid gap-2 mt-4">
 
             <a
                 href="{{ url_for('my_complaints') }}"
                 class="btn btn-primary"
             >
-
                 📋 My Complaint Status
-
             </a>
 
 
@@ -188,9 +594,7 @@
                 href="{{ url_for('home') }}"
                 class="btn btn-secondary"
             >
-
-                {{ t.home }}
-
+                🏠 {{ t.home }}
             </a>
 
         </div>
@@ -199,18 +603,58 @@
         {% else %}
 
 
-        <!-- Report form -->
+        <!-- FARMER HELP -->
+
+        <div class="help-box">
+
+            <strong>
+                🌾 How to Report
+            </strong>
+
+            <br>
+
+            <small>
+
+                Enter the details printed on your seed or fertilizer packet.
+                If you don't know the dealer name, you can leave it blank.
+
+            </small>
+
+            <br><br>
+
+            <small>
+
+                <strong>💡 Tip:</strong>
+
+                Describe the problem in simple words, such as poor germination,
+                damaged packaging, wrong label, or suspicious product.
+
+            </small>
+
+        </div>
+
+
+        <!-- FORM -->
 
         <form method="POST">
 
 
-            <!-- Product ID -->
+            <!-- PRODUCT INFORMATION -->
+
+            <div class="section-title">
+                📦 Product Information
+            </div>
+
+
+            <!-- PRODUCT ID -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
                     🆔 Product ID
+
+                    <span class="required-note">*</span>
 
                 </label>
 
@@ -223,22 +667,25 @@
                     required
                 >
 
+
                 <div class="form-text">
 
-                    Enter the Product ID printed on the seed or fertilizer package.
+                    Enter the Product ID printed on the packet.
 
                 </div>
 
             </div>
 
 
-            <!-- Product Type -->
+            <!-- PRODUCT TYPE -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
-                    {{ t.product_type }}
+                    🌱 Product Type
+
+                    <span class="required-note">*</span>
 
                 </label>
 
@@ -250,23 +697,15 @@
                 >
 
                     <option value="">
-
-                        {{ t.product_type }}
-
+                        Select product type
                     </option>
-
 
                     <option value="Seeds">
-
-                        🌱 {{ t.seeds }}
-
+                        🌱 Seeds
                     </option>
 
-
                     <option value="Fertilizer">
-
-                        🧪 {{ t.fertilizer }}
-
+                        🧪 Fertilizer
                     </option>
 
                 </select>
@@ -274,13 +713,15 @@
             </div>
 
 
-            <!-- Product Name -->
+            <!-- PRODUCT NAME -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
-                    {{ t.product_name }}
+                    🏷️ Product Name
+
+                    <span class="required-note">*</span>
 
                 </label>
 
@@ -289,20 +730,29 @@
                     type="text"
                     name="product"
                     class="form-control"
-                    placeholder="{{ t.product_name }}"
+                    placeholder="Example: Paddy Seeds"
                     required
                 >
+
+
+                <div class="form-text">
+
+                    Enter the name written on the packet.
+
+                </div>
 
             </div>
 
 
-            <!-- Company Name -->
+            <!-- COMPANY -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
                     🏢 Company Name
+
+                    <span class="required-note">*</span>
 
                 </label>
 
@@ -315,16 +765,25 @@
                     required
                 >
 
+
+                <div class="form-text">
+
+                    Enter the manufacturer or company name.
+
+                </div>
+
             </div>
 
 
-            <!-- Batch Number -->
+            <!-- BATCH -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
                     🧾 Batch Number
+
+                    <span class="required-note">*</span>
 
                 </label>
 
@@ -337,16 +796,27 @@
                     required
                 >
 
+
+                <div class="form-text">
+
+                    Enter the batch or lot number printed on the packet.
+
+                </div>
+
             </div>
 
 
-            <!-- Dealer Name -->
+            <!-- DEALER OPTIONAL -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
-                    {{ t.dealer_name }}
+                    🏪 Dealer / Seller Name
+
+                    <span class="optional-note">
+                        (Optional)
+                    </span>
 
                 </label>
 
@@ -355,20 +825,35 @@
                     type="text"
                     name="dealer"
                     class="form-control"
-                    placeholder="{{ t.dealer_name }}"
-                    required
+                    placeholder="Enter dealer name if known"
                 >
+
+
+                <div class="form-text">
+
+                    You can leave this blank if you don't know the dealer.
+
+                </div>
 
             </div>
 
 
-            <!-- Complaint Description -->
+            <!-- PROBLEM -->
+
+            <div class="section-title">
+                ⚠️ What Happened?
+            </div>
+
+
+            <!-- DESCRIPTION -->
 
             <div class="mb-3">
 
                 <label class="form-label fw-bold">
 
-                    {{ t.description }}
+                    📝 Describe the Problem
+
+                    <span class="required-note">*</span>
 
                 </label>
 
@@ -376,42 +861,92 @@
                 <textarea
                     name="description"
                     class="form-control"
-                    placeholder="{{ t.description }}"
+                    placeholder="Example: Seeds did not germinate properly or the packet label looks suspicious."
                     required
                 ></textarea>
 
 
                 <div class="form-text">
 
-                    {{ t.step_description }}
+                    Explain the problem in your own words.
 
                 </div>
 
             </div>
 
 
-            <!-- Submit -->
+            <!-- EXAMPLES -->
+
+            <div class="help-box">
+
+                <strong>
+                    💡 You can report problems such as:
+                </strong>
+
+                <ul class="mb-0 mt-2">
+
+                    <li>
+                        Seeds are not germinating properly.
+                    </li>
+
+                    <li>
+                        Seeds look different from the expected variety.
+                    </li>
+
+                    <li>
+                        Packet label looks incorrect or suspicious.
+                    </li>
+
+                    <li>
+                        Fertilizer looks different from the usual product.
+                    </li>
+
+                    <li>
+                        Package appears damaged or tampered with.
+                    </li>
+
+                    <li>
+                        Product quality seems unusually poor.
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- SUBMIT -->
 
             <button
                 type="submit"
                 class="btn btn-danger submit-btn"
             >
 
-                🚨 {{ t.submit }}
+                🚨 Submit Complaint
 
             </button>
+
+
+            <div class="text-center mt-2">
+
+                <small class="text-muted">
+
+                    Your complaint will be analyzed and stored for review.
+
+                </small>
+
+            </div>
 
         </form>
 
 
-        <!-- Navigation -->
+        <!-- BACK -->
 
         <a
             href="{{ url_for('home') }}"
             class="btn btn-secondary back-btn"
         >
 
-            {{ t.back }}
+            ← {{ t.back }}
 
         </a>
 

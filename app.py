@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from translations import TRANSLATIONS
+from ai_researcher import research_product, save_research_result
 
 app = Flask(__name__)
 
@@ -150,6 +151,24 @@ def init_db():
             )
         except sqlite3.OperationalError:
             pass
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ai_research_results (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            complaint_id INTEGER,
+            product_id TEXT,
+            product_type TEXT,
+            product_name TEXT,
+            company TEXT,
+            batch_no TEXT,
+            assessment TEXT,
+            confidence REAL,
+            reason TEXT,
+            evidence TEXT,
+            sources TEXT,
+            analyzed_at TEXT
+        )
+    """)
 
     cursor.execute("""
         UPDATE complaints
@@ -1627,6 +1646,31 @@ def report():
         conn.commit()
         conn.close()
 
+        research_result = None
+
+        try:
+            research_result = research_product(
+                product_id,
+                product_type,
+                product,
+                company,
+                batch_no
+            )
+
+            research_result["complaint_id"] = (
+                complaint_id
+            )
+
+            save_research_result(
+                research_result
+            )
+
+        except Exception as error:
+            print(
+                "AI research error:",
+                error
+            )
+
         return render_template(
             "report.html",
             complaint_submitted=True,
@@ -1636,7 +1680,8 @@ def report():
             ai_reason=ai_reason,
             validation_status=validation_status,
             validation_reason=validation_reason,
-            validation_method=validation_method
+            validation_method=validation_method,
+            research_result=research_result
         )
 
     return render_template(
