@@ -3,3 +3,5 @@ qrcode[pil]
 gunicorn
 requests
 beautifulsoup4
+python-dotenv
+groq
