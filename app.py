@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
+import json
 import os
 import secrets
 import smtplib
 from email.message import EmailMessage
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
 
 from translations import TRANSLATIONS
 from ai_researcher import research_product, save_research_result
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -166,9 +170,31 @@ def init_db():
             reason TEXT,
             evidence TEXT,
             sources TEXT,
+            ai_finding TEXT,
+            complaint_analysis TEXT,
+            product_information TEXT,
+            recommended_action TEXT,
             analyzed_at TEXT
         )
     """)
+
+    research_columns_to_add = {
+        "ai_finding": "TEXT",
+        "complaint_analysis": "TEXT",
+        "product_information": "TEXT",
+        "recommended_action": "TEXT"
+    }
+
+    for column, definition in research_columns_to_add.items():
+        try:
+            cursor.execute(
+                f"""
+                ALTER TABLE ai_research_results
+                ADD COLUMN {column} {definition}
+                """
+            )
+        except sqlite3.OperationalError:
+            pass
 
     cursor.execute("""
         UPDATE complaints
@@ -1654,16 +1680,52 @@ def report():
                 product_type,
                 product,
                 company,
-                batch_no
+                batch_no,
+                description
             )
 
             research_result["complaint_id"] = (
                 complaint_id
             )
 
-            save_research_result(
+            research_id = save_research_result(
                 research_result
             )
+
+            research_result["research_id"] = research_id
+
+            research_conn = get_db()
+
+            research_conn.execute("""
+                UPDATE ai_research_results
+                SET
+                    ai_finding = ?,
+                    complaint_analysis = ?,
+                    product_information = ?,
+                    recommended_action = ?
+                WHERE id = ?
+            """, (
+                research_result.get(
+                    "ai_finding",
+                    ""
+                ),
+                research_result.get(
+                    "complaint_analysis",
+                    ""
+                ),
+                research_result.get(
+                    "product_information",
+                    ""
+                ),
+                research_result.get(
+                    "recommended_action",
+                    ""
+                ),
+                research_id
+            ))
+
+            research_conn.commit()
+            research_conn.close()
 
         except Exception as error:
             print(
@@ -2126,7 +2188,52 @@ def admin():
         parameters
     ).fetchall()
 
+    research_history = conn.execute("""
+        SELECT
+            id,
+            complaint_id,
+            product_id,
+            product_type,
+            product_name,
+            company,
+            batch_no,
+            assessment,
+            confidence,
+            reason,
+            evidence,
+            sources,
+            ai_finding,
+            complaint_analysis,
+            product_information,
+            recommended_action,
+            analyzed_at
+        FROM ai_research_results
+        ORDER BY id DESC
+        LIMIT 50
+    """).fetchall()
+
     conn.close()
+
+    research_history_data = []
+
+    for research in research_history:
+        item = dict(research)
+
+        try:
+            item["evidence"] = json.loads(
+                item.get("evidence") or "[]"
+            )
+        except (TypeError, ValueError):
+            item["evidence"] = item.get("evidence") or []
+
+        try:
+            item["sources"] = json.loads(
+                item.get("sources") or "[]"
+            )
+        except (TypeError, ValueError):
+            item["sources"] = item.get("sources") or []
+
+        research_history_data.append(item)
 
     return render_template(
         "admin.html",
@@ -2138,7 +2245,8 @@ def admin():
         verified=verified,
         rejected=rejected,
         search=search,
-        status_filter=status_filter
+        status_filter=status_filter,
+        ai_research_history=research_history_data
     )
 
 

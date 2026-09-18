@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
         {{ t.get(
@@ -17,19 +18,13 @@
     </title>
 
 
-    <!-- ================================================== -->
     <!-- BOOTSTRAP -->
-    <!-- ================================================== -->
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
 
-
-    <!-- ================================================== -->
-    <!-- STYLE -->
-    <!-- ================================================== -->
 
     <style>
 
@@ -48,9 +43,7 @@
         }
 
 
-        /* ==================================================
-           HEADER
-        ================================================== */
+        /* HEADER */
 
         .header-card {
             background: linear-gradient(
@@ -84,9 +77,7 @@
         }
 
 
-        /* ==================================================
-           LANGUAGE
-        ================================================== */
+        /* LANGUAGE */
 
         .language-box {
             background: white;
@@ -102,9 +93,7 @@
         }
 
 
-        /* ==================================================
-           STATISTICS
-        ================================================== */
+        /* STATISTICS */
 
         .stat-card {
             background: white;
@@ -124,16 +113,13 @@
 
         .stat-number {
             font-size: 32px;
-
             font-weight: bold;
-
             margin-top: 8px;
         }
 
 
         .stat-title {
             color: #666;
-
             font-weight: bold;
         }
 
@@ -163,9 +149,7 @@
         }
 
 
-        /* ==================================================
-           SEARCH
-        ================================================== */
+        /* SEARCH */
 
         .search-card {
             background: white;
@@ -183,9 +167,7 @@
         }
 
 
-        /* ==================================================
-           COMPLAINT CARD
-        ================================================== */
+        /* COMPLAINT CARD */
 
         .complaint-card {
             background: white;
@@ -215,9 +197,7 @@
         }
 
 
-        /* ==================================================
-           INFORMATION BOX
-        ================================================== */
+        /* INFORMATION BOX */
 
         .info-box {
             background: #f8f9fa;
@@ -235,9 +215,7 @@
         }
 
 
-        /* ==================================================
-           AI BOX
-        ================================================== */
+        /* AI BOX */
 
         .ai-box {
             padding: 15px;
@@ -269,9 +247,14 @@
         }
 
 
-        /* ==================================================
-           PRODUCT VALIDATION
-        ================================================== */
+        .ai-neutral {
+            background: #f8f9fa;
+
+            border-left: 5px solid #6c757d;
+        }
+
+
+        /* VALIDATION */
 
         .validation-box {
             padding: 15px;
@@ -317,9 +300,7 @@
         }
 
 
-        /* ==================================================
-           STATUS BADGES
-        ================================================== */
+        /* STATUS BADGES */
 
         .status-badge {
             display: inline-block;
@@ -336,35 +317,29 @@
 
         .status-pending {
             background: #fff3cd;
-
             color: #856404;
         }
 
 
         .status-review {
             background: #cfe2ff;
-
             color: #084298;
         }
 
 
         .status-verified {
             background: #d1e7dd;
-
             color: #0f5132;
         }
 
 
         .status-rejected {
             background: #f8d7da;
-
             color: #842029;
         }
 
 
-        /* ==================================================
-           STATUS SECTION
-        ================================================== */
+        /* STATUS SECTION */
 
         .status-section {
             background: #f8f9fa;
@@ -393,9 +368,7 @@
         }
 
 
-        /* ==================================================
-           DESCRIPTION
-        ================================================== */
+        /* DESCRIPTION */
 
         .description-box {
             background: #fff;
@@ -410,9 +383,7 @@
         }
 
 
-        /* ==================================================
-           ACTION BUTTONS
-        ================================================== */
+        /* ACTION BUTTONS */
 
         .action-buttons {
             margin-top: 15px;
@@ -425,9 +396,243 @@
         }
 
 
-        /* ==================================================
-           EMPTY STATE
-        ================================================== */
+        /* AI RESEARCH HISTORY */
+
+        .research-history-card {
+            background: white;
+
+            border-radius: 15px;
+
+            margin-top: 35px;
+
+            margin-bottom: 30px;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.08);
+
+            overflow: hidden;
+        }
+
+
+        .research-history-header {
+            background: linear-gradient(
+                135deg,
+                #6f42c1,
+                #59359a
+            );
+
+            color: white;
+
+            padding: 20px;
+        }
+
+
+        .research-history-header h3 {
+            margin: 0;
+
+            font-weight: bold;
+        }
+
+
+        .research-history-header p {
+            margin-top: 6px;
+
+            margin-bottom: 0;
+
+            opacity: 0.9;
+        }
+
+
+        .research-history-body {
+            padding: 20px;
+        }
+
+
+        .research-item {
+            background: #f8f9fa;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            margin-bottom: 18px;
+
+            border-left: 5px solid #6f42c1;
+        }
+
+
+        .research-item:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .research-title {
+            font-size: 18px;
+
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+
+        .research-meta {
+            background: white;
+
+            border: 1px solid #dee2e6;
+
+            border-radius: 10px;
+
+            padding: 12px;
+
+            height: 100%;
+        }
+
+
+        .research-label {
+            font-weight: bold;
+
+            color: #555;
+
+            font-size: 13px;
+        }
+
+
+        .research-value {
+            margin-top: 3px;
+
+            word-break: break-word;
+        }
+
+
+        .research-assessment {
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            font-size: 13px;
+        }
+
+
+        .assessment-risk {
+            background: #f8d7da;
+
+            color: #842029;
+        }
+
+
+        .assessment-possible {
+            background: #fff3cd;
+
+            color: #856404;
+        }
+
+
+        .assessment-evidence {
+            background: #d1e7dd;
+
+            color: #0f5132;
+        }
+
+
+        .assessment-reference {
+            background: #cfe2ff;
+
+            color: #084298;
+        }
+
+
+        .assessment-inconclusive {
+            background: #e2e3e5;
+
+            color: #41464b;
+        }
+
+
+        .research-reason {
+            background: white;
+
+            border-radius: 10px;
+
+            border: 1px solid #dee2e6;
+
+            padding: 15px;
+
+            margin-top: 15px;
+        }
+
+
+        .research-evidence {
+            background: #eef6ff;
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            margin-top: 15px;
+        }
+
+
+        .research-evidence-item {
+            background: white;
+
+            border-radius: 8px;
+
+            padding: 10px 12px;
+
+            margin-top: 8px;
+
+            border-left: 3px solid #0d6efd;
+        }
+
+
+        .research-source {
+            background: white;
+
+            border: 1px solid #dee2e6;
+
+            border-radius: 8px;
+
+            padding: 10px 12px;
+
+            margin-top: 8px;
+        }
+
+
+        .research-source a {
+            text-decoration: none;
+
+            word-break: break-all;
+        }
+
+
+        .research-date {
+            color: #6c757d;
+
+            font-size: 13px;
+        }
+
+
+        .research-empty {
+            text-align: center;
+
+            padding: 45px 20px;
+
+            color: #6c757d;
+        }
+
+
+        .research-empty-icon {
+            font-size: 50px;
+
+            margin-bottom: 10px;
+        }
+
+
+        /* EMPTY STATE */
 
         .empty-box {
             background: white;
@@ -448,9 +653,7 @@
         }
 
 
-        /* ==================================================
-           RESPONSIVE
-        ================================================== */
+        /* RESPONSIVE */
 
         @media (max-width: 768px) {
 
@@ -470,6 +673,11 @@
                 font-size: 26px;
             }
 
+
+            .research-history-body {
+                padding: 12px;
+            }
+
         }
 
     </style>
@@ -483,9 +691,7 @@
 <div class="container-main">
 
 
-    <!-- ================================================== -->
     <!-- LANGUAGE SELECTOR -->
-    <!-- ================================================== -->
 
     <div class="language-box">
 
@@ -527,9 +733,7 @@
     </div>
 
 
-    <!-- ================================================== -->
     <!-- HEADER -->
-    <!-- ================================================== -->
 
     <div class="header-card">
 
@@ -557,9 +761,7 @@
     </div>
 
 
-    <!-- ================================================== -->
     <!-- STATISTICS -->
-    <!-- ================================================== -->
 
     <div class="row g-3">
 
@@ -711,9 +913,7 @@
     </div>
 
 
-    <!-- ================================================== -->
     <!-- SEARCH AND FILTER -->
-    <!-- ================================================== -->
 
     <div class="search-card">
 
@@ -743,9 +943,7 @@
 
                     <input
                         type="text"
-
                         name="search"
-
                         class="form-control"
 
                         value="{{ search }}"
@@ -893,9 +1091,7 @@
     </div>
 
 
-    <!-- ================================================== -->
     <!-- COMPLAINT COUNT -->
-    <!-- ================================================== -->
 
     <div class="mb-3">
 
@@ -915,9 +1111,7 @@
     </div>
 
 
-    <!-- ================================================== -->
     <!-- COMPLAINTS -->
-    <!-- ================================================== -->
 
     {% if complaints %}
 
@@ -928,9 +1122,7 @@
         <div class="complaint-card">
 
 
-            <!-- ================================================== -->
             <!-- COMPLAINT HEADER -->
-            <!-- ================================================== -->
 
             <div class="complaint-header">
 
@@ -1034,9 +1226,7 @@
             </div>
 
 
-            <!-- ================================================== -->
             <!-- COMPLAINT BODY -->
-            <!-- ================================================== -->
 
             <div class="complaint-body">
 
@@ -1044,9 +1234,7 @@
                 <div class="row g-3">
 
 
-                    <!-- ================================================== -->
                     <!-- PRODUCT INFORMATION -->
-                    <!-- ================================================== -->
 
                     <div class="col-md-6">
 
@@ -1084,12 +1272,12 @@
 
                                 </strong>
 
-                                {{ complaint['product'] }}
+                                {{ complaint['product'] or '-' }}
 
                             </p>
 
 
-                            <p class="mb-0">
+                            <p>
 
                                 <strong>
 
@@ -1102,7 +1290,40 @@
 
                                 </strong>
 
-                                {{ complaint['dealer'] }}
+                                {{ complaint['dealer'] or '-' }}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+                                    🆔 Product ID:
+                                </strong>
+
+                                {{ complaint['product_id'] or '-' }}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+                                    🏢 Company:
+                                </strong>
+
+                                {{ complaint['company'] or '-' }}
+
+                            </p>
+
+
+                            <p class="mb-0">
+
+                                <strong>
+                                    🧾 Batch Number:
+                                </strong>
+
+                                {{ complaint['batch_no'] or '-' }}
 
                             </p>
 
@@ -1112,9 +1333,7 @@
                     </div>
 
 
-                    <!-- ================================================== -->
                     <!-- AI ANALYSIS -->
-                    <!-- ================================================== -->
 
                     <div class="col-md-6">
 
@@ -1129,9 +1348,14 @@
                             <div class="ai-box ai-medium">
 
 
-                        {% else %}
+                        {% elif complaint['ai_risk'] == 'Low Risk' %}
 
                             <div class="ai-box ai-low">
+
+
+                        {% else %}
+
+                            <div class="ai-box ai-neutral">
 
                         {% endif %}
 
@@ -1203,9 +1427,7 @@
                 </div>
 
 
-                <!-- ================================================== -->
                 <!-- PRODUCT VALIDATION -->
-                <!-- ================================================== -->
 
                 {% if complaint['validation_status'] == 'Database Match' %}
 
@@ -1248,9 +1470,7 @@
                             <div class="col-md-3">
 
                                 <strong>
-
                                     🆔 Product ID
-
                                 </strong>
 
                                 <div class="mt-1">
@@ -1265,9 +1485,7 @@
                             <div class="col-md-3">
 
                                 <strong>
-
                                     🏢 Company
-
                                 </strong>
 
                                 <div class="mt-1">
@@ -1282,9 +1500,7 @@
                             <div class="col-md-3">
 
                                 <strong>
-
                                     🧾 Batch Number
-
                                 </strong>
 
                                 <div class="mt-1">
@@ -1299,9 +1515,7 @@
                             <div class="col-md-3">
 
                                 <strong>
-
                                     📊 Validation Status
-
                                 </strong>
 
                                 <div class="mt-1">
@@ -1312,7 +1526,6 @@
 
                             </div>
 
-
                         </div>
 
 
@@ -1322,9 +1535,7 @@
                         <p>
 
                             <strong>
-
                                 💡 Validation Reason:
-
                             </strong>
 
                             {{ complaint['validation_reason'] or '-' }}
@@ -1335,9 +1546,7 @@
                         <p class="mb-0">
 
                             <strong>
-
                                 🛠️ Validation Method:
-
                             </strong>
 
                             {{ complaint['validation_method'] or '-' }}
@@ -1348,9 +1557,7 @@
                     </div>
 
 
-                <!-- ================================================== -->
                 <!-- DESCRIPTION -->
-                <!-- ================================================== -->
 
                 <div class="description-box">
 
@@ -1368,16 +1575,14 @@
 
                     <p class="mb-0 mt-2">
 
-                        {{ complaint['description'] }}
+                        {{ complaint['description'] or '-' }}
 
                     </p>
 
                 </div>
 
 
-                <!-- ================================================== -->
                 <!-- STATUS MANAGEMENT -->
-                <!-- ================================================== -->
 
                 <div class="status-section">
 
@@ -1409,7 +1614,6 @@
                             name="status"
                             class="form-select"
                         >
-
 
                             <option
                                 value="Pending"
@@ -1482,7 +1686,6 @@
 
                             </option>
 
-
                         </select>
 
 
@@ -1500,15 +1703,12 @@
 
                         </button>
 
-
                     </form>
 
                 </div>
 
 
-                <!-- ================================================== -->
                 <!-- ACTION BUTTONS -->
-                <!-- ================================================== -->
 
                 <div class="action-buttons">
 
@@ -1548,16 +1748,12 @@
     {% else %}
 
 
-        <!-- ================================================== -->
         <!-- NO COMPLAINTS -->
-        <!-- ================================================== -->
 
         <div class="empty-box">
 
             <div class="empty-icon">
-
                 📭
-
             </div>
 
 
@@ -1587,15 +1783,449 @@
 
 
     <!-- ================================================== -->
-    <!-- BOTTOM BUTTONS -->
+    <!-- AI RESEARCH HISTORY -->
     <!-- ================================================== -->
+
+    <div class="research-history-card">
+
+
+        <div class="research-history-header">
+
+            <h3>
+                🤖 AI Research History
+            </h3>
+
+            <p>
+                Review previous AI-assisted agricultural research
+                performed for submitted complaints.
+            </p>
+
+        </div>
+
+
+        <div class="research-history-body">
+
+
+            {% if ai_research_history %}
+
+
+                <div class="mb-3">
+
+                    <strong>
+
+                        📚
+
+                        {{ ai_research_history|length }}
+
+                        research record(s)
+
+                    </strong>
+
+                </div>
+
+
+                {% for research in ai_research_history %}
+
+
+                <div class="research-item">
+
+
+                    <!-- RESEARCH TITLE -->
+
+                    <div class="research-title">
+
+                        🤖 Research #{{ research['id'] }}
+
+                        {% if research['complaint_id'] %}
+
+                            <span class="text-muted">
+
+                                — Complaint #{{ research['complaint_id'] }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- PRODUCT DETAILS -->
+
+                    <div class="row g-3">
+
+
+                        <div class="col-md-4">
+
+                            <div class="research-meta">
+
+                                <div class="research-label">
+                                    🆔 Product ID
+                                </div>
+
+                                <div class="research-value">
+                                    {{ research['product_id'] or '-' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="research-meta">
+
+                                <div class="research-label">
+                                    🌱 Product Type
+                                </div>
+
+                                <div class="research-value">
+                                    {{ research['product_type'] or '-' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="research-meta">
+
+                                <div class="research-label">
+                                    📦 Product Name
+                                </div>
+
+                                <div class="research-value">
+                                    {{ research['product_name'] or '-' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="research-meta">
+
+                                <div class="research-label">
+                                    🏢 Company
+                                </div>
+
+                                <div class="research-value">
+                                    {{ research['company'] or '-' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="research-meta">
+
+                                <div class="research-label">
+                                    🧾 Batch Number
+                                </div>
+
+                                <div class="research-value">
+                                    {{ research['batch_no'] or '-' }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="research-meta">
+
+                                <div class="research-label">
+                                    📅 Analyzed At
+                                </div>
+
+                                <div class="research-value research-date">
+
+                                    {{ research['analyzed_at'] or '-' }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ASSESSMENT -->
+
+                    <div class="research-reason">
+
+
+                        <strong>
+                            📊 AI Assessment:
+                        </strong>
+
+
+                        {% set assessment = research['assessment'] or '' %}
+
+
+                        {% if assessment == 'High Risk' %}
+
+                            <span class="research-assessment assessment-risk">
+
+                                🔴 {{ assessment }}
+
+                            </span>
+
+
+                        {% elif assessment == 'Possible Risk' %}
+
+                            <span class="research-assessment assessment-possible">
+
+                                🟡 {{ assessment }}
+
+                            </span>
+
+
+                        {% elif assessment == 'Evidence Found' %}
+
+                            <span class="research-assessment assessment-evidence">
+
+                                🟢 {{ assessment }}
+
+                            </span>
+
+
+                        {% elif assessment == 'Reference Evidence' %}
+
+                            <span class="research-assessment assessment-reference">
+
+                                🔵 {{ assessment }}
+
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="research-assessment assessment-inconclusive">
+
+                                ⚪ {{ assessment or 'Inconclusive' }}
+
+                            </span>
+
+                        {% endif %}
+
+
+                        <hr>
+
+
+                        <p class="mb-2">
+
+                            <strong>
+                                🎯 Confidence:
+                            </strong>
+
+                            {{ research['confidence'] or 0 }}%
+
+                        </p>
+
+
+                        <p class="mb-0">
+
+                            <strong>
+                                💡 Reason:
+                            </strong>
+
+                            {{ research['reason'] or '-' }}
+
+                        </p>
+
+
+                    </div>
+
+
+                    <!-- EVIDENCE -->
+
+                    {% if research['evidence'] %}
+
+                    <div class="research-evidence">
+
+
+                        <strong>
+                            📚 Evidence
+                        </strong>
+
+
+                        {% set evidence_data = research['evidence'] %}
+
+
+                        {% if evidence_data is string %}
+
+                            <div class="research-evidence-item">
+
+                                {{ evidence_data }}
+
+                            </div>
+
+                        {% else %}
+
+                            {% for evidence in evidence_data %}
+
+                                <div class="research-evidence-item">
+
+                                    {{ evidence }}
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- SOURCES -->
+
+                    {% if research['sources'] %}
+
+                    <div class="research-evidence">
+
+
+                        <strong>
+                            🔗 Sources Used
+                        </strong>
+
+
+                        {% set source_data = research['sources'] %}
+
+
+                        {% if source_data is string %}
+
+                            <div class="research-source">
+
+                                {{ source_data }}
+
+                            </div>
+
+                        {% else %}
+
+                            {% for source in source_data %}
+
+
+                                <div class="research-source">
+
+
+                                    {% if source is mapping %}
+
+
+                                        {% if source.name %}
+
+                                            <strong>
+                                                {{ source.name }}
+                                            </strong>
+
+                                            <br>
+
+                                        {% elif source.source %}
+
+                                            <strong>
+                                                {{ source.source }}
+                                            </strong>
+
+                                            <br>
+
+                                        {% endif %}
+
+
+                                        {% if source.url %}
+
+                                            <a
+                                                href="{{ source.url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+
+                                                🔗
+                                                {{ source.url }}
+
+                                            </a>
+
+                                        {% endif %}
+
+
+                                    {% else %}
+
+                                        {{ source }}
+
+                                    {% endif %}
+
+
+                                </div>
+
+                            {% endfor %}
+
+                        {% endif %}
+
+
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <div class="research-empty">
+
+                    <div class="research-empty-icon">
+                        🤖
+                    </div>
+
+
+                    <h4>
+                        No AI Research History
+                    </h4>
+
+
+                    <p class="mb-0">
+
+                        AI research records will appear here
+                        after complaints are analyzed.
+
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+    <!-- BOTTOM BUTTONS -->
 
     <div class="text-center mt-4 mb-4">
 
 
         <a
             href="{{ url_for('add_product') }}"
-
             class="btn btn-success me-2"
         >
 
@@ -1611,7 +2241,6 @@
 
         <a
             href="{{ url_for('home') }}"
-
             class="btn btn-outline-secondary me-2"
         >
 
@@ -1627,7 +2256,6 @@
 
         <a
             href="{{ url_for('logout') }}"
-
             class="btn btn-outline-danger"
         >
 
@@ -1647,9 +2275,7 @@
 </div>
 
 
-<!-- ================================================== -->
 <!-- JAVASCRIPT -->
-<!-- ================================================== -->
 
 <script>
 
